@@ -43,7 +43,7 @@ function Logout() {
           className="bg-red-500 hover:bg-red-700 text-white font-bold w-8 h-8  rounded-full"
           onClick={handleLogout}
         >
-          <FaPowerOff className="ms-2" />
+          <FaPowerOff className="ms-2 " />
         </button>
       ) : (
         // <FaPowerOff

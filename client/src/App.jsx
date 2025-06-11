@@ -20,10 +20,10 @@ function App() {
     <div className=" overflow-hidden">
     
     <Routes>
-        <Route path="/register-doaguru-spark-build" element={<RegisteredAdmin />} />
+        {/* <Route path="/register-doaguru-spark-build" element={<RegisteredAdmin />} /> */}
         <Route path="/register-user" element={<RegisteredUser />} />
       
-        <Route path="/admin" element={<AdminLoginPage/>} />
+        {/* <Route path="/admin" element={<AdminLoginPage/>} /> */}
      
         <Route path="/admin-reset-password" element={<AdminResetPassword />} />
         <Route path="/user-reset-password" element={<UserResetPassword />} />

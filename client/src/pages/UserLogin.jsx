@@ -31,7 +31,7 @@ function UserLogin() {
         if (res.data.success) {
           dispatch(loginUser(res.data.user));
           cogoToast.success(res.data.message);
-          navigate("/user-account");
+          navigate("/");
         } else {
           cogoToast.error(res.data.message);
         }

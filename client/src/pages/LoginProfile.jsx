@@ -7,7 +7,7 @@ function LoginProfile() {
 
   return (
     <div className="UserLogin">
-      <h5>Welcome, {userName.name}</h5>
+      <h5 className='text-lg'>Welcome, {userName.name}</h5>
       {/* Other UserLogin content */}
     </div>
   );
