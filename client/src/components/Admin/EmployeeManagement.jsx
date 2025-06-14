@@ -10,12 +10,12 @@ import cogoToast from 'cogo-toast';
 import { useSelector } from 'react-redux';
 
 
-function UserManagement() {
+function EmployeeManagement() {
     const navigate = useNavigate();
-    const [user, setUser] = useState([]);
+    const [employee, setEmployee] = useState([]);
 
     const [currentLead, setCurrentLead] = useState({
-      user_name : "", email : "", phone_no : ""
+      name : "", email : "", phone : "",password : "",roles : "",
     
     });
 
@@ -34,23 +34,23 @@ function UserManagement() {
   
     // Fetch leads and employees from the API
     useEffect(() => {
-      fetchUser();
+      fetchEmployee();
   
       
     }, []);
   
-    const fetchUser = async () => {
+    const fetchEmployee = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:9000/api/user",
+          "http://localhost:9000/api/employees",
           {
             headers: {
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`
           }}
         );
-        setUser(response.data);
-        console.log(user);
+        setEmployee(response.data);
+        console.log(employee);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -70,7 +70,7 @@ function UserManagement() {
     const handleCreateClick = () => {
       setIsEditing(false);
       setCurrentLead({
-        user_name : "", email : "", phone_no : ""
+         name : "", email : "", phone : "",password : "",roles : "",
        
       });
       setShowPopup(true);
@@ -94,15 +94,15 @@ function UserManagement() {
       );
       if (isConfirmed) {
         try {
-          await axios.delete(`http://localhost:9000/api/user/${id}`,
+          await axios.delete(`http://localhost:9000/api/employee/${id}`,
             {
               headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`
             }});
-          fetchUser(); // Refresh the list after deletion
+          fetchEmployee(); // Refresh the list after deletion
         } catch (error) {
-          console.error("Error deleting user:", error);
+          console.error("Error deleting employee:", error);
         }
       }
     };
@@ -110,8 +110,8 @@ function UserManagement() {
       let formErrors = {};
       let isValid = true;
   
-      if (!currentLead.user_name) {
-        formErrors.user_name = "Name is required";
+      if (!currentLead.name) {
+        formErrors.name = "Name is required";
         isValid = false;
       }
   
@@ -124,8 +124,16 @@ function UserManagement() {
       }
       
   
-      if (!currentLead.phone_no) {
-        formErrors.phone_no = "Phone No is required";
+      if (!currentLead.phone) {
+        formErrors.phone = "Phone No is required";
+        isValid = false;
+      }
+      if (!currentLead.password) {
+        formErrors.password = "Password is required";
+        isValid = false;
+      }
+      if (!currentLead.roles) {
+        formErrors.phone = "Role is required";
         isValid = false;
       }
      
@@ -140,7 +148,7 @@ function UserManagement() {
     const saveChanges = async () => {
 
       if (validateForm()) {
-      const leadData = {
+      const EmployeeData = {
         ...currentLead,
       
       };
@@ -150,19 +158,19 @@ function UserManagement() {
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `http://localhost:9000/api/user/${currentLead.id}`,
-              leadData,
+              `http://localhost:9000/api/employees/${currentLead.id}`,
+              EmployeeData,
               {
                 headers: {
                   'Content-Type': 'application/json',
                   'Authorization': `Bearer ${token}`
               }}
             );
-            fetchUser(); // Refresh the list
+            fetchEmployee(); // Refresh the list
             closePopup();
           } else {
             // Create new lead
-            await axios.post("http://localhost:9000/api/user-register", leadData,
+            await axios.post("http://localhost:9000/api/employees", EmployeeData,
               {
                 headers: {
                   'Content-Type': 'application/json',
@@ -171,7 +179,7 @@ function UserManagement() {
     
             // Construct WhatsApp message link with encoded parameters
          
-            fetchUser(); // Refresh the list
+            fetchEmployee(); // Refresh the list
             closePopup();
           }
           setLoading(false)
@@ -194,12 +202,12 @@ function UserManagement() {
   
 
     // Calculate total number of pages
-  const pageCount = Math.ceil(user.length / leadsPerPage);
+  const pageCount = Math.ceil(employee.length / leadsPerPage);
   
   // Pagination logic
   const indexOfLastLead = (currentPage + 1) * leadsPerPage;
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-  const currentLeads = leadsPerPage === Infinity ? user : user.slice(indexOfFirstLead, indexOfLastLead);
+  const currentLeads = leadsPerPage === Infinity ? employee : employee.slice(indexOfFirstLead, indexOfLastLead);
   
   
   const handlePageClick = (data) => {
@@ -217,7 +225,7 @@ function UserManagement() {
           <div className="2xl:w-[89%]  2xl:ml-40 mx-4 ">
             <div className="main  mt-[6rem]">
               <h1 className="text-2xl text-center font-medium">
-                User Management
+                Employee Management
               </h1>
               <div className="mx-auto h-[3px] w-16 bg-[#34495E] my-3"></div>
   
@@ -227,7 +235,7 @@ function UserManagement() {
                   className="bg-blue-500 text-white px-4 py-2 mt-5 rounded hover:bg-blue-700 font-medium"
                   onClick={handleCreateClick}
                 >
-                 Add User 
+                 Add Employee 
                 </button>
               </div>
            
@@ -292,14 +300,14 @@ function UserManagement() {
                         </td>
                         <Link to={`/user-profile-data/${user.id}`} className=''>
                         <td className="px-6 py-4 border-b border-gray-200 font-semibold underline text-[blue]">
-                          {user.user_name}
+                          {user.name}
                         </td>
                         </Link>
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold text-wrap">
                           {user.email}
                         </td>
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold text-wrap">
-                          {user.phone_no}
+                          {user.phone}
                         </td>
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold text-wrap">
                           {user.roles}
@@ -362,24 +370,24 @@ function UserManagement() {
   
             {showPopup && (
               <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-                <div className="w-full max-w-md p-6 mx-2 bg-white rounded-lg shadow-lg h-[55%] overflow-y-auto">
+                <div className="w-full max-w-lg p-6 mx-2 bg-white rounded-lg shadow-lg h-[65%] overflow-y-auto">
                   <h2 className="text-xl mb-4">
-                    {isEditing ? "Edit User" : "Add User"}
+                    {isEditing ? "Edit Employee" : "Add Employee"}
                   </h2>
                 
                 <div className="mb-4">
                     <label className="block text-gray-700">Name</label>
                     <input
                       type="text"
-                      name="user_name"
-                      value={currentLead.user_name}
+                      name="name"
+                      value={currentLead.name}
                       onChange={handleInputChange}
                       className={`w-full px-3 py-2 border ${
-                        errors.user_name ? "border-red-500" : "border-gray-300"
+                        errors.name ? "border-red-500" : "border-gray-300"
                       } rounded`}
                     />
-                       {errors.user_name && (
-                    <span className="text-red-500">{errors.user_name}</span>
+                       {errors.name && (
+                    <span className="text-red-500">{errors.name}</span>
                   )}
                   </div>
                 
@@ -404,15 +412,46 @@ function UserManagement() {
                     <label className="block text-gray-700">Phone Number</label>
                     <input
                       type="text"
-                      name="phone_no"
-                      value={currentLead.phone_no}
+                      name="phone"
+                      value={currentLead.phone}
                       onChange={handleInputChange}
                       className={`w-full px-3 py-2 border ${
-                        errors.phone_no ? "border-red-500" : "border-gray-300"
+                        errors.phone ? "border-red-500" : "border-gray-300"
                       } rounded`}
                     />
-                     {errors.phone_no && (
-                    <span className="text-red-500">{errors.phone_no}</span>
+                     {errors.phone && (
+                    <span className="text-red-500">{errors.phone}</span>
+                  )}
+                  </div>
+                  
+                <div className="mb-4">
+                    <label className="block text-gray-700">Password</label>
+                    <input
+                      type="text"
+                      name="password"
+                      value={currentLead.password}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 py-2 border ${
+                        errors.password ? "border-red-500" : "border-gray-300"
+                      } rounded`}
+                    />
+                     {errors.password && (
+                    <span className="text-red-500">{errors.password}</span>
+                  )}
+                  </div>
+                <div className="mb-4">
+                    <label className="block text-gray-700">Role</label>
+                    <input
+                      type="text"
+                      name="roles"
+                      value={currentLead.roles}
+                      onChange={handleInputChange}
+                      className={`w-full px-3 py-2 border ${
+                        errors.roles ? "border-red-500" : "border-gray-300"
+                      } rounded`}
+                    />
+                     {errors.roles && (
+                    <span className="text-red-500">{errors.roles}</span>
                   )}
                   </div>
                 
@@ -445,5 +484,5 @@ function UserManagement() {
     );
   }
 
-export default UserManagement
+export default EmployeeManagement
 

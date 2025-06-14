@@ -6,6 +6,7 @@ const path = require('path');
 dotenv.config();
 
 const Router = require("./routers/userdataroutes")
+const Router1 = require("./routers/employeeroutes")
 
 const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors());
 
 
 app.use('/api',Router)
+app.use('/api',Router1)
 
 const PORT = process.env.PORT;
 

@@ -98,29 +98,18 @@ const AdminSider = () => {
               </Link>
             </li>
             <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/user-management")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/employee-management")}`}>
               <Link
-                to="/user-management"
+                to="/employee-management"
                 className="flex flex-col items-center py-3"
               >
                 <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
                 <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
-                 User Management 
+                 Employee Management 
                 </h3>
               </Link>
             </li>
-            <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/discount-bar")}`}>
-              <Link
-                to="/discount-bar"
-                className="flex flex-col items-center py-3"
-              >
-                <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
-                 Discount Bar
-                </h3>
-              </Link>
-            </li>
+           
        
             <hr className="w-full border-gray-400" />
             <li className={`xl:w-full ${getSidebarClass("/admin-profile")}`}>

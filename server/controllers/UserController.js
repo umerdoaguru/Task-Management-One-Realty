@@ -432,5 +432,103 @@ const resetPasswordSuperAdmin = (req, res) => {
   }
 };
 
+const createTask = (req, res) => {
+  const { title, assigned_to, due_date, priority, taskpriorities } = req.body;
+
+  const taskSql = "INSERT INTO tasks (title, assigned_to, due_date, priority) VALUES (?, ?, ?, ?)";
+  const taskValues = [title, assigned_to, due_date, priority];
+
+  db.query(taskSql, taskValues, (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+
+    const taskId = result.insertId;
+
+    const prioritySql = "INSERT INTO task_priorities (task_id, priority_item) VALUES ?";
+    const priorityValues = taskpriorities.map(item => [taskId, item]);
+
+    db.query(prioritySql, [priorityValues], (err2) => {
+      if (err2) return res.status(500).json({ error: err2 });
+
+      res.status(201).json({ message: "Task created successfully", taskId });
+    });
+  });
+};
+
+
+const getAllTasks = (req, res) => {
+  const sql = "SELECT * FROM tasks ORDER BY created_at DESC";
+
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+};
+
+// Get Task by ID
+const getTaskById = (req, res) => {
+  const taskId = req.params.id;
+
+  const taskSql = "SELECT * FROM tasks WHERE id = ?";
+  db.query(taskSql, [taskId], (err, result) => {
+    if (err) return res.status(500).json({ error: err });
+    if (result.length === 0) return res.status(404).json({ message: "Task not found" });
+
+    const task = result[0];
+
+    const prioritySql = "SELECT priority_item FROM task_priorities WHERE task_id = ?";
+    db.query(prioritySql, [taskId], (err2, priorityResults) => {
+      if (err2) return res.status(500).json({ error: err2 });
+
+      task.taskpriorities = priorityResults.map(p => p.priority_item);
+      res.json(task);
+    });
+  });
+};
+
+// Update Task
+const updateTask = (req, res) => {
+  const taskId = req.params.id;
+  const { title, assigned_to, due_date, priority, taskpriorities } = req.body;
+
+  const updateSql = "UPDATE tasks SET title = ?, assigned_to = ?, due_date = ?, priority = ? WHERE id = ?";
+  const values = [title, assigned_to, due_date, priority, taskId];
+
+  db.query(updateSql, values, (err) => {
+    if (err) return res.status(500).json({ error: err });
+
+    // Delete old priorities
+    const deletePrioritySql = "DELETE FROM task_priorities WHERE task_id = ?";
+    db.query(deletePrioritySql, [taskId], (err2) => {
+      if (err2) return res.status(500).json({ error: err2 });
+
+      // Insert new priorities
+      if (taskpriorities && taskpriorities.length > 0) {
+        const insertPrioritySql = "INSERT INTO task_priorities (task_id, priority_item) VALUES ?";
+        const priorityValues = taskpriorities.map(item => [taskId, item]);
+
+        db.query(insertPrioritySql, [priorityValues], (err3) => {
+          if (err3) return res.status(500).json({ error: err3 });
+
+          res.json({ message: "Task updated successfully" });
+        });
+      } else {
+        res.json({ message: "Task updated successfully without priorities" });
+      }
+    });
+  });
+};
+
+// Delete Task
+const deleteTask = (req, res) => {
+  const taskId = req.params.id;
+  const sql = "DELETE FROM tasks WHERE id = ?";
+
+  db.query(sql, [taskId], (err) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json({ message: "Task deleted successfully" });
+  });
+};
+
+
   
-  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct};
+  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById};

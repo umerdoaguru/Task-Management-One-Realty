@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { user_data, register, login, getuserdata, sendOtpSuperAdmin, verifyOtpSuperAdmin, resetPasswordSuperAdmin, deleteContatct } = require("../controllers/UserController");
+const { user_data, register, login, getuserdata, sendOtpSuperAdmin, verifyOtpSuperAdmin, resetPasswordSuperAdmin, deleteContatct, createTask, getAllTasks, getTaskById, updateTask, deleteTask } = require("../controllers/UserController");
 const authenticate = require("../Middleware/authMiddleware");
 const router = express.Router();
 
@@ -18,6 +18,13 @@ router.delete("/user-data/:id", deleteContatct);
 router.post("/sendOtp-superadmin", sendOtpSuperAdmin);
 router.post("/verifyOtp-superadmin", verifyOtpSuperAdmin);
 router.put("/resetPassword-superadmin",resetPasswordSuperAdmin);
+
+
+router.post("/tasks", createTask);
+router.get("/tasks", getAllTasks);
+router.get("/tasks/:id", getTaskById);
+router.put("/tasks/:id", updateTask);
+router.delete("/tasks/:id", deleteTask);
 
 
 module.exports = router;
