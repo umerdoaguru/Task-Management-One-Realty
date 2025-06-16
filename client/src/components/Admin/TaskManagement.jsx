@@ -12,6 +12,7 @@ import MainHeader from "./../../pages/MainHeader";
 function TaskMangement() {
   const navigate = useNavigate();
   const [task, setTasks] = useState([]);
+  const [employees, setEmployees] = useState([]);
 
   const [currentLead, setCurrentLead] = useState({
     title: "",
@@ -40,6 +41,7 @@ function TaskMangement() {
   // Fetch leads and employees from the API
   useEffect(() => {
     fetchTask();
+    fetchEmployees();
   }, []);
 
   const fetchTask = async () => {
@@ -54,6 +56,19 @@ function TaskMangement() {
       console.log(task);
     } catch (error) {
       console.error("Error fetching task:", error);
+    }
+  };
+    const fetchEmployees = async () => {
+    try {
+      const response = await axios.get("http://localhost:9000/api/employees",
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+        }});
+      setEmployees(response.data);
+    } catch (error) {
+      console.error("Error fetching employees:", error);
     }
   };
 
@@ -385,15 +400,22 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
 
       <div className="mb-4">
         <label className="block text-gray-700">Assigned To</label>
-        <input
-          type="text"
+         <select
+                       type="text"
           name="assigned_to"
           value={currentLead.assigned_to}
           onChange={handleInputChange}
           className={`w-full px-3 py-2 border ${
             errors.assigned_to ? "border-red-500" : "border-gray-300"
           } rounded`}
-        />
+                  >
+                    <option value="">Select Employee</option>
+                    {employees.map((employee) => (
+                      <option key={employee.employee_id} value={employee.name}>
+                        {employee.name}
+                      </option>
+                    ))}
+                  </select>
         {errors.assigned_to && (
           <span className="text-red-500">{errors.assigned_to}</span>
         )}

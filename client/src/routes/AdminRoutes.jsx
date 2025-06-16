@@ -8,6 +8,7 @@ import AdminSider from "../components/Admin/AdminSider";
 import TaskManagement from "../components/Admin/TaskManagement";
 import EmployeeManagement from "../components/Admin/EmployeeManagement";
 import AdminProfile from "../components/Admin/AdminProfile";
+import Task_Detail from "../components/Admin/Task_Detail";
 
 
 
@@ -25,6 +26,7 @@ function AdminRoutes() {
         <Route path="/task-management" element={<TaskManagement/>} />
         <Route path="/employee-management" element={<EmployeeManagement/>} />
         <Route path="/admin-profile" element={<AdminProfile />} />
+        <Route path="/task-details" element={<Task_Detail />} />
   
       
       </Routes>
