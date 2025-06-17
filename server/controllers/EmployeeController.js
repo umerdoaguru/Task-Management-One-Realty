@@ -49,4 +49,12 @@ const deleteEmployee = (req, res) => {
   });
 };
 
-module.exports = {createEmployee,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById}
+// Get All Employees
+const getAllTaskDetails = (req, res) => {
+  db.query("SELECT * FROM task_priorities WHERE task_id", (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json(results);
+  });
+};
+
+module.exports = {createEmployee,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails}

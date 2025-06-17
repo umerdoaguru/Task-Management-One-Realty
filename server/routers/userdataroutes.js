@@ -2,6 +2,7 @@ const express = require("express");
 
 const { user_data, register, login, getuserdata, sendOtpSuperAdmin, verifyOtpSuperAdmin, resetPasswordSuperAdmin, deleteContatct, createTask, getAllTasks, getTaskById, updateTask, deleteTask } = require("../controllers/UserController");
 const authenticate = require("../Middleware/authMiddleware");
+const { getAllTaskDetails } = require("../controllers/EmployeeController");
 const router = express.Router();
 
 
@@ -26,5 +27,6 @@ router.get("/tasks/:id", getTaskById);
 router.put("/tasks/:id", updateTask);
 router.delete("/tasks/:id", deleteTask);
 
+router.get("/tasks-details/:id", getAllTaskDetails);
 
 module.exports = router;

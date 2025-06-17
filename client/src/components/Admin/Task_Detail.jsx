@@ -4,15 +4,12 @@ import axios from "axios";
 import moment from "moment";
 
 import { useSelector } from "react-redux";
-import MainHeader from './../../pages/MainHeader';
-import AdminSider from './AdminSider';
 
-
-
+import ReactPaginate from "react-paginate";
 
 
 const Task_Detail = ({id,closeModalRemark }) => {
-  const [remarks, setRemarks] = useState([]);
+  const [task, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(10);
   const [filterText, setFilterText] = useState("");
@@ -20,62 +17,64 @@ const Task_Detail = ({id,closeModalRemark }) => {
   const superadminuser = useSelector((state) => state.auth.user);
   const token = superadminuser.token;
   
-c
+
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchRemarks();
+    fetchTaskDetail();
   }, [id, render]);
 
-  const fetchRemarks = async () => {
+  const fetchTaskDetail = async () => {
     try {
-      const response = await axios.get(`https://crm.one-realty.in/api/remarks-super-admin/${id}`,
+      const response = await axios.get(`http://localhost:9000/api/tasks-details/${id}`,
         {
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
         }});
-      setRemarks(response.data);
+      setTasks(response.data);
       console.log(response);
     } catch (error) {
-      console.error("Error fetching remarks:", error);
+      console.error("Error fetching task:", error);
     }
   };
 
  
 
- 
-  const filteredRemarks = remarks.filter((remark) =>
-    remark.name.toLowerCase().includes(filterText.toLowerCase())
-  );
+
 
   const offset = currentPage * itemsPerPage;
-  const currentRemarks = filteredRemarks.slice(offset, offset + itemsPerPage);
-  const pageCount = Math.ceil(filteredRemarks.length / itemsPerPage);
+  const currenttask = task.slice(offset, offset + itemsPerPage);
+  const pageCount = Math.ceil(task.length / itemsPerPage);
   const handleClose = () => {
     closeModalRemark(); // Close the modal
     // closeModalLead(); // Close the lead profile
+  };
+    const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
+    const handleBackClick = () => {
+    navigate(-1); // -1 navigates to the previous page in history
   };
 
   return (
     <>
       {/* <MainHeader />
       <SuperAdminSider /> */}
-      <div className="relative container mt-4 ">
-      <button
-          onClick={handleClose}
-          className="absolute top-2 left-2 text-[black] hover:text-gray-700 text-[3rem]"
-          title="Close"
-        >
-          ×
-        </button>
+      <div className="relative container  2xl:w-[89%]  2xl:ml-40 mt-20 ">
+    <button
+            onClick={handleBackClick}
+            className="bg-blue-500 text-white mt-5 px-4 py-2 rounded"
+          >
+            Go Back
+          </button>
        
 
        
         <div className="w-full px-2 mx-auto p-4">
           <div className="w-full px-2 mt-4">
-            <h2 className="text-2xl font-bold mb-4 text-center">All Remarks</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">All task</h2>
             <div className=" overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 border border-gray-300">
                 <thead className="bg-gray-100">
@@ -83,21 +82,17 @@ c
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       S.no
                     </th>
+                   
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Lead Id
+                      Task Id
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Name
+                      Priority item
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Assigned To
+                      Status
                     </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Remark Status
-                    </th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Remark Answer
-                    </th>
+                   
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Date
                     </th>
@@ -105,15 +100,19 @@ c
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {currentRemarks.map((remark, index) => (
-                    <tr key={remark.id}>
+                  {currenttask.map((task, index) => (
+                    <tr key={task.id}>
                       <td className="px-6 py-4 whitespace-nowrap">{offset + index + 1}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{remark.lead_id}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{remark.name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{remark.employee_name}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{remark.remark_status}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{remark.answer_remark}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{remark.date}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{task.task_id}</td>
+                
+                      <td className="px-6 py-4 whitespace-nowrap">{task.priority_item}</td>
+                      <td className="px-6 py-4 whitespace-nowrap">{task.status}</td>
+           
+                    <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold">
+                                              {moment(task.createdTime)
+                                                .format("DD MMM YYYY")
+                                                .toUpperCase()}
+                                            </td>
                   
                     </tr>
                   ))}
@@ -122,6 +121,28 @@ c
 
              
             </div>
+          </div>
+              <div className=" mt-4 mb-3 flex justify-center">
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={handlePageClick}
+              containerClassName="flex justify-center gap-2"
+              pageClassName="border rounded cursor-pointer"
+              pageLinkClassName="w-full h-full flex items-center justify-center py-2 px-4"
+              previousClassName="border rounded cursor-pointer"
+              previousLinkClassName="w-full h-full flex items-center justify-center py-2 px-3"
+              nextClassName="border rounded cursor-pointer"
+              nextLinkClassName="w-full h-full flex items-center justify-center py-2 px-3"
+              breakClassName="border rounded cursor-pointer"
+              breakLinkClassName="w-full h-full flex items-center justify-center"
+              activeClassName="bg-blue-500 text-white border-blue-500"
+              disabledClassName="opacity-50 cursor-not-allowed"
+            />
           </div>
         </div>
       </div>

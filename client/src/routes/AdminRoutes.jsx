@@ -26,7 +26,7 @@ function AdminRoutes() {
         <Route path="/task-management" element={<TaskManagement/>} />
         <Route path="/employee-management" element={<EmployeeManagement/>} />
         <Route path="/admin-profile" element={<AdminProfile />} />
-        <Route path="/task-details" element={<Task_Detail />} />
+        <Route path="/task-details/:id" element={<Task_Detail />} />
   
       
       </Routes>

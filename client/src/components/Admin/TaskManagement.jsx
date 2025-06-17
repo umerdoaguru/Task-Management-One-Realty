@@ -8,6 +8,7 @@ import ReactPaginate from "react-paginate";
 import { useSelector } from "react-redux";
 import AdminSider from "./AdminSider";
 import MainHeader from "./../../pages/MainHeader";
+import cogoToast from "cogo-toast";
 
 function TaskMangement() {
   const navigate = useNavigate();
@@ -180,8 +181,8 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
         if (isEditing) {
           // Update existing lead
           await axios.put(
-            `http://localhost:9000/api/user/${currentLead.id}`,
-            leadData,
+            `http://localhost:9000/api/tasks/${currentLead.id}`,
+            taskData,
             {
               headers: {
                 "Content-Type": "application/json",
@@ -194,7 +195,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
         } else {
           // Create new lead
           await axios.post(
-            "http://localhost:9000/api/createtask",
+            "http://localhost:9000/api/tasks  ",
             taskData,
             {
               headers: {
@@ -310,7 +311,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold">
                           {index + 1 + currentPage * leadsPerPage}
                         </td>
-                        <Link to={`/user-profile-data/${user.id}`} className="">
+                        <Link to={`/task-details/${user.id}`} className="">
                           <td className="px-6 py-4 border-b border-gray-200 font-semibold underline text-[blue]">
                             {user.title}
                           </td>
