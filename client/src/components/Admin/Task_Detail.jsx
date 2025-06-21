@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 import ReactPaginate from "react-paginate";
 
 
-const Task_Detail = ({id,closeModalRemark }) => {
+const Task_Detail = () => {
   const [task, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [itemsPerPage] = useState(10);
@@ -20,6 +20,8 @@ const Task_Detail = ({id,closeModalRemark }) => {
 
 
   const navigate = useNavigate();
+
+  const {id} = useParams();
 
   useEffect(() => {
     fetchTaskDetail();

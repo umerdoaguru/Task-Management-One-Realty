@@ -9,6 +9,8 @@ import TaskManagement from "../components/Admin/TaskManagement";
 import EmployeeManagement from "../components/Admin/EmployeeManagement";
 import AdminProfile from "../components/Admin/AdminProfile";
 import Task_Detail from "../components/Admin/Task_Detail";
+import TaskHistory from "../components/Admin/TaskHistory";
+import AdminDashboard from "../components/Admin/AdminDashboard";
 
 
 
@@ -22,11 +24,13 @@ function AdminRoutes() {
    <AdminSider/>
       <Routes>
         {/* Admin routes */}
-        <Route path="/" element={<Categories />} />
+        <Route path="/" element={<AdminDashboard />} />
+        <Route path="/admin-dashbord" element={<AdminDashboard/>} />
         <Route path="/task-management" element={<TaskManagement/>} />
         <Route path="/employee-management" element={<EmployeeManagement/>} />
         <Route path="/admin-profile" element={<AdminProfile />} />
         <Route path="/task-details/:id" element={<Task_Detail />} />
+        <Route path="/task-history" element={<TaskHistory />} />
   
       
       </Routes>

@@ -279,7 +279,7 @@ const sendOtpSuperAdmin = (req, res) => {
           return otp;
         }
 
-        const OTP = generateOTP(6);
+        const OTP = generateOTP(6);    
 
         // try {
         //   const transporter = nodemailer.createTransport({
@@ -529,6 +529,59 @@ const deleteTask = (req, res) => {
   });
 };
 
+const getAllTasksWithPriorities = (req, res) => {
+  const sql = `
+    SELECT 
+      t.id AS task_id,
+      t.title,
+      t.assigned_to,
+      t.due_date,
+      t.priority,
+      t.created_at,
+      p.id AS priority_id,
+      p.priority_item,
+      p.status
+    FROM tasks t
+    LEFT JOIN task_priorities p ON t.id = p.task_id
+  `;
+
+  db.query(sql, (err, result) => {
+    if (err) {
+      console.error("Error fetching tasks:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    // Format the result: group priorities under each task
+    const taskMap = {};
+
+    result.forEach(row => {
+      const taskId = row.task_id;
+
+      if (!taskMap[taskId]) {
+        taskMap[taskId] = {
+          id: taskId,
+          title: row.title,
+          assigned_to: row.assigned_to,
+          due_date: row.due_date,
+          priority: row.priority,
+          created_at: row.created_at,
+          priorities: [],
+        };
+      }
+
+      if (row.priority_id) {
+        taskMap[taskId].priorities.push({
+          id: row.priority_id,
+          priority_item: row.priority_item,
+          status: row.status,
+        });
+      }
+    });
+
+    const finalResult = Object.values(taskMap);
+    res.json(finalResult);
+  });
+};
 
   
-  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById};
+  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities};

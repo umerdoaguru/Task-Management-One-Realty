@@ -60,9 +60,9 @@ const AdminSider = () => {
 
        
             {/* <hr className="w-full border-gray-400" /> */}
-            <li className={`xl:w-full ${getSidebarClass("/categories")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/admin-dashbord")}`}>
               <Link
-                to="/categories"
+                to="/admin-dashbord"
                 className="flex flex-col items-center py-3"
               >
                 <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
@@ -86,9 +86,9 @@ const AdminSider = () => {
             </li>
        
             <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/items")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/task-history")}`}>
               <Link
-                to="/items"
+                to="/task-history"
                 className="flex flex-col items-center py-3"
               >
                 <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
