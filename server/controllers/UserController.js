@@ -433,18 +433,18 @@ const resetPasswordSuperAdmin = (req, res) => {
 };
 
 const createTask = (req, res) => {
-  const { title, assigned_to, due_date, priority, taskpriorities } = req.body;
+  const { title, assigned_to, due_date, priority, taskpriorities,employeeId } = req.body;
 
-  const taskSql = "INSERT INTO tasks (title, assigned_to, due_date, priority) VALUES (?, ?, ?, ?)";
-  const taskValues = [title, assigned_to, due_date, priority];
+  const taskSql = "INSERT INTO tasks (title, assigned_to, due_date, priority,employeeId) VALUES (?, ?, ?, ?,?)";
+  const taskValues = [title, assigned_to, due_date, priority,employeeId];
 
   db.query(taskSql, taskValues, (err, result) => {
     if (err) return res.status(500).json({ error: err });
 
     const taskId = result.insertId;
 
-    const prioritySql = "INSERT INTO task_priorities (task_id, priority_item) VALUES ?";
-    const priorityValues = taskpriorities.map(item => [taskId, item]);
+    const prioritySql = "INSERT INTO task_priorities (task_id, priority_item,employeeId) VALUES ?";
+    const priorityValues = taskpriorities.map(item => [taskId, item,employeeId]);
 
     db.query(prioritySql, [priorityValues], (err2) => {
       if (err2) return res.status(500).json({ error: err2 });
@@ -566,7 +566,7 @@ const getAllTasksWithPriorities = (req, res) => {
           priority: row.priority,
           created_at: row.created_at,
           priorities: [],
-        };
+        }; 
       }
 
       if (row.priority_id) {
@@ -583,5 +583,117 @@ const getAllTasksWithPriorities = (req, res) => {
   });
 };
 
+
+const getAllTasksByEmployee = (req, res) => {
+  const employeeId = req.params.id;
+
+  const sql = `
+    SELECT 
+      t.id AS task_id,
+      t.title,
+      t.assigned_to,
+      t.due_date,
+      t.priority AS task_priority,
+      t.employeeId,
+      tp.id AS priority_id,
+      tp.priority_item,
+      tp.status,
+      tp.createdTime
+    FROM tasks t
+    LEFT JOIN task_priorities tp ON t.id = tp.task_id
+    WHERE t.employeeId = ?
+  `;
+
+  db.query(sql, [employeeId], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+
+    // Group results by task
+    const taskMap = {};
+
+    results.forEach(row => {
+      if (!taskMap[row.task_id]) {
+        taskMap[row.task_id] = {
+          id: row.task_id,
+          title: row.title,
+          assigned_to: row.assigned_to,
+          due_date: row.due_date,
+          priority: row.task_priority,
+          employeeId: row.employeeId,
+          task_priorities: [],
+        };
+      }
+
+      if (row.priority_id) {
+        taskMap[row.task_id].task_priorities.push({
+          id: row.priority_id,
+          priority_item: row.priority_item,
+          status: row.status,
+          createdTime: row.createdTime,
+        });
+      }
+    });
+
+    const tasksWithPriorities = Object.values(taskMap);
+
+    res.json(tasksWithPriorities);
+  });
+};
+
+const getAllTasksList = (req, res) => {
+
+
+  const sql = `
+    SELECT 
+      t.id AS task_id,
+      t.title,
+      t.assigned_to,
+      t.due_date,
+      t.priority AS task_priority,
+      t.employeeId,
+      tp.id AS priority_id,
+      tp.priority_item,
+      tp.status,
+      tp.createdTime
+    FROM tasks t
+    LEFT JOIN task_priorities tp ON t.id = tp.task_id
+   
+  `;
+
+  db.query(sql, (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+
+    // Group results by task
+    const taskMap = {};
+
+    results.forEach(row => {
+      if (!taskMap[row.task_id]) {
+        taskMap[row.task_id] = {
+          id: row.task_id,
+          title: row.title,
+          assigned_to: row.assigned_to,
+          due_date: row.due_date,
+          priority: row.task_priority,
+          employeeId: row.employeeId,
+          task_priorities: [],
+        };
+      }
+
+      if (row.priority_id) {
+        taskMap[row.task_id].task_priorities.push({
+          id: row.priority_id,
+          priority_item: row.priority_item,
+          status: row.status,
+          createdTime: row.createdTime,
+        });
+      }
+    });
+
+    const tasksWithPriorities = Object.values(taskMap);
+
+    res.json(tasksWithPriorities);
+  });
+};
+
+
   
-  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities};
+  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities,getAllTasksByEmployee,getAllTasksList};

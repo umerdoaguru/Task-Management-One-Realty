@@ -19,7 +19,7 @@ function TaskMangement() {
     title: "",
     assigned_to: "",
     priority: "",
-  
+    employeeId:"",
     due_date: "",
   });
 
@@ -77,7 +77,19 @@ function TaskMangement() {
     const { name, value } = e.target;
     setCurrentLead((prevLead) => {
       const updatedLead = { ...prevLead, [name]: value };
-
+    // If assigned_to changes, update employeeId and employeephone accordingly
+      if (name === "assigned_to") {
+        const selectedEmployee = employees.find(
+          (employee) => employee.name === value
+        );
+        if (selectedEmployee) {
+          updatedLead.employeeId = selectedEmployee.employeeId;
+         
+        } else {
+          updatedLead.employeeId = ""; // Reset if no match
+         
+        }
+      }
       return updatedLead;
     });
   };
@@ -87,7 +99,7 @@ function TaskMangement() {
       title: "",
       assigned_to: "",
       priority: "",
-
+      employeeId:"",
       due_date: "",
     });
     setShowPopup(true);
@@ -412,7 +424,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
                   >
                     <option value="">Select Employee</option>
                     {employees.map((employee) => (
-                      <option key={employee.employee_id} value={employee.name}>
+                      <option key={employee.employeeId} value={employee.name}>
                         {employee.name}
                       </option>
                     ))}

@@ -37,6 +37,8 @@ function AdminDashboard() {
 
       // Get only latest 5 tasks
       setRecentTasks(tasks.slice(0, 5));
+      console.log(recentTasks);
+      
     } catch (error) {
       console.error("Error fetching dashboard data:", error);
     }

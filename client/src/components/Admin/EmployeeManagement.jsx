@@ -298,7 +298,7 @@ function EmployeeManagement() {
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold">
                        {index + 1 + currentPage * leadsPerPage}
                         </td>
-                        <Link to={`/user-profile-data/${user.id}`} className=''>
+                        <Link to={`/employee-alltask/${user.employeeId}`} className=''>
                         <td className="px-6 py-4 border-b border-gray-200 font-semibold underline text-[blue]">
                           {user.name}
                         </td>
