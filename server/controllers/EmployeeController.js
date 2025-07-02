@@ -1,19 +1,43 @@
 const { db } = require("../db");
-
+const bcrypt = require("bcrypt");
 
 
 const createEmployee = (req, res) => {
-  const { name, email, password, phone, roles } = req.body;
-  const sql = "INSERT INTO employee (name, email, password, phone, roles) VALUES (?, ?, ?, ?, ?)";
-  db.query(sql, [name, email, password, phone, roles || "Employee"], (err, result) => {
+  const { user_name, email,  roles } = req.body;
+     // Hash the "password" and "cpassword"
+      const saltRounds = 10;
+      const hashedPassword = bcrypt.hashSync('onerealty', saltRounds);
+  const sql = "INSERT INTO registered_data (user_name, email, password,  roles) VALUES ( ?, ?, ?, ?)";
+  db.query(sql, [user_name, email, hashedPassword,  roles || "Employee"], (err, result) => {
     if (err) return res.status(500).json({ error: err });
     res.status(201).json({ message: "Employee created", employeeId: result.insertId });
   });
 };
+const getalluserdata = async (req, res) => {
+  try {
+   
+    const sql = "SELECT * FROM registered_data WHERE roles = 'Employee'";
+
+    const userdata = await new Promise((resolve, reject) => {
+      db.query(sql, (err, results) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(results);
+        }
+      });
+    });
+
+    res.status(200).json(userdata);
+  } catch (error) {
+    console.error("Error processing request:", error);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+};
 
 // Get All Employees
 const getAllEmployees = (req, res) => {
-  db.query("SELECT * FROM employee ORDER BY createdTime DESC", (err, results) => {
+  db.query("SELECT * FROM registered_data WHERE roles = 'Employee'", (err, results) => {
     if (err) return res.status(500).json({ error: err });
     res.json(results);
   });
@@ -22,7 +46,7 @@ const getAllEmployees = (req, res) => {
 // Get One Employee
 const getEmployeeById = (req, res) => {
   const id = req.params.id;
-  db.query("SELECT * FROM employee WHERE employeeId = ?", [id], (err, results) => {
+  db.query("SELECT * FROM registered_data WHERE user_id = ?", [id], (err, results) => {
     if (err) return res.status(500).json({ error: err });
     if (results.length === 0) return res.status(404).json({ message: "Employee not found" });
     res.json(results[0]);
@@ -32,9 +56,9 @@ const getEmployeeById = (req, res) => {
 // Update Employee
 const updateEmployee = (req, res) => {
   const id = req.params.id;
-  const { name, email, password, phone, roles } = req.body;
-  const sql = "UPDATE employee SET name = ?, email = ?, password = ?, phone = ?, roles = ? WHERE employeeId = ?";
-  db.query(sql, [name, email, password, phone, roles, id], (err) => {
+  const { user_name, email, roles } = req.body;
+  const sql = "UPDATE registered_data SET user_name = ?, email = ?, roles = ? WHERE user_id = ?";
+  db.query(sql, [user_name, email, roles, id], (err) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: "Employee updated" });
   });
@@ -43,7 +67,7 @@ const updateEmployee = (req, res) => {
 // Delete Employee
 const deleteEmployee = (req, res) => {
   const id = req.params.id;
-  db.query("DELETE FROM employee WHERE employeeId = ?", [id], (err) => {
+  db.query("DELETE FROM registered_data WHERE user_id = ?", [id], (err) => {
     if (err) return res.status(500).json({ error: err });
     res.json({ message: "Employee deleted" });
   });
@@ -66,4 +90,4 @@ const getTaskDetails = (req, res) => {
   });
 };
 
-module.exports = {createEmployee,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails,getTaskDetails}
+module.exports = {createEmployee,getalluserdata,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails,getTaskDetails}

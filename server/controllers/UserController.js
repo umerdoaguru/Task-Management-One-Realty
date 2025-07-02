@@ -131,6 +131,7 @@ const login = async (req, res) => {
   res.status(500).send({success:false , message:"error in login ", error})
   }
 };
+
 const getuserdata = async (req, res) => {
   try {
    

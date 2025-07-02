@@ -35,7 +35,7 @@ function App() {
   )}
   {user?.roles === "Employee" && (
     <Route path="/*" element={<EmployeeRoutes />} />
-  )}
+  )}       
   {!user?.roles && <Route path="*" element={<Navigate to="/main_page" />} />}
 
 

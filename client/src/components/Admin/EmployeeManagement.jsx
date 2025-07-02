@@ -94,7 +94,7 @@ function EmployeeManagement() {
       );
       if (isConfirmed) {
         try {
-          await axios.delete(`http://localhost:9000/api/employee/${id}`,
+          await axios.delete(`http://localhost:9000/api/employees/${id}`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -326,7 +326,7 @@ function EmployeeManagement() {
                           </button>
                           <button
                             className="text-red-500 hover:text-red-700 mx-2"
-                            onClick={() => handleDeleteClick(user.id)}
+                            onClick={() => handleDeleteClick(user.employeeId)}
                           >
                             <BsTrash size={20} />
                           </button>

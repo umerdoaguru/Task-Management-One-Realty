@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { FaTasks, FaUserTie, FaClipboardCheck, FaClipboardList, FaPlusCircle } from "react-icons/fa";
+import { Link } from "react-router-dom";
 
 function AdminDashboard() {
   const [stats, setStats] = useState({
@@ -58,7 +59,7 @@ function AdminDashboard() {
 
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <QuickLink title="Add Task" icon={<FaPlusCircle />} url="/add-task" />
+        <QuickLink title="Add Task" icon={<FaPlusCircle />} url="/task-management" />
         <QuickLink title="All Tasks" icon={<FaTasks />} url="/task-list" />
         <QuickLink title="Manage Employees" icon={<FaUserTie />} url="/employee-management" />
       </div>
@@ -73,25 +74,26 @@ function AdminDashboard() {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100 text-left">
                 <tr>
-                  <th className="px-4 py-2">Title</th>
-                  <th className="px-4 py-2">Assigned To</th>
-                  <th className="px-4 py-2">Due Date</th>
+                  <th className="px-4 py-2">Task Id</th>
+                  <th className="px-4 py-2">Priorirty</th>
                   <th className="px-4 py-2">Status</th>
+                  <th className="px-4 py-2">Due Date</th>
                 </tr>
               </thead>
               <tbody>
                 {recentTasks.map(task => {
-                  const isCompleted = task.priorities?.some(p => p.status === "completed");
+                  
                   return (
                     <tr key={task.id} className="border-t">
-                      <td className="px-4 py-2 font-semibold">{task.title}</td>
-                      <td className="px-4 py-2">{task.assigned_to}</td>
-                      <td className="px-4 py-2">{new Date(task.due_date).toLocaleDateString()}</td>
+                      <td className="px-4 py-2 font-semibold">{task.task_id}</td>
+                      <td className="px-4 py-2">{task.priority_item}</td>
                       <td className="px-4 py-2">
-                        <span className={`px-3 py-1 text-sm rounded-full font-medium ${isCompleted ? "bg-green-200 text-green-700" : "bg-yellow-200 text-yellow-700"}`}>
-                          {isCompleted ? "Completed" : "Pending"}
-                        </span>
+                         <span className={task.status === "completed" ? "bg-green-600 text-white rounded-full p-1" : "bg-yellow-600 text-white rounded-full p-1"}>
+    {task.status}
+  </span>
+                   
                       </td>
+                      <td className="px-4 py-2">{new Date(task.createdTime).toLocaleDateString()}</td>
                     </tr>
                   );
                 })}
@@ -117,10 +119,10 @@ const StatCard = ({ title, count, icon, bg }) => (
 
 // 👇 Reusable QuickLink
 const QuickLink = ({ title, icon, url }) => (
-  <a href={url} className="p-4 bg-blue-50 hover:bg-blue-100 rounded shadow flex items-center justify-center gap-3 text-blue-700 font-medium transition">
+  <Link to={url} className="p-4 bg-blue-50 hover:bg-blue-100 rounded shadow flex items-center justify-center gap-3 text-blue-700 font-medium transition">
     {icon}
     <span>{title}</span>
-  </a>
+  </Link>
 );
 
 export default AdminDashboard;
