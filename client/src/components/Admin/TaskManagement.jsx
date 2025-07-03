@@ -68,6 +68,8 @@ function TaskMangement() {
             'Authorization': `Bearer ${token}`
         }});
       setEmployees(response.data);
+      console.log(employees);
+      
     } catch (error) {
       console.error("Error fetching employees:", error);
     }
@@ -80,10 +82,10 @@ function TaskMangement() {
     // If assigned_to changes, update employeeId and employeephone accordingly
       if (name === "assigned_to") {
         const selectedEmployee = employees.find(
-          (employee) => employee.name === value
+          (employee) => employee.user_name === value
         );
         if (selectedEmployee) {
-          updatedLead.employeeId = selectedEmployee.employeeId;
+          updatedLead.employeeId = selectedEmployee.user_id;
          
         } else {
           updatedLead.employeeId = ""; // Reset if no match
@@ -424,8 +426,8 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
                   >
                     <option value="">Select Employee</option>
                     {employees.map((employee) => (
-                      <option key={employee.employeeId} value={employee.name}>
-                        {employee.name}
+                      <option key={employee.user_id} value={employee.user_name}>
+                        {employee.user_name}
                       </option>
                     ))}
                   </select>

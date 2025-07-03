@@ -22,7 +22,7 @@ const EmployeeSider = () => {
     <>
       {/* Hamburger Button - Hidden on large screens */}
       <button
-        className="fixed top-16 md:top-20 left-4 z-50 text-black "
+        className="fixed top-18 md:top-24 left-4 z-50 text-black "
         onClick={toggleSidebar}
       >
         <AiOutlineMenu size={25} />
@@ -30,7 +30,7 @@ const EmployeeSider = () => {
 
       {/* Sidebar */}
       <div
-        className={`fixed mt-16 md:mt-[70px] lg:mt-[60px] inset-y-0 bg-black  overflow-hidden 2xl:translate-x-0 transform ${
+        className={`fixed mt-16 md:mt-[70px] lg:mt-[90px] inset-y-0 bg-[#02993e] overflow-hidden 2xl:translate-x-0 transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } transition-transform duration-300 ease-in-out w-20 md:w-[150px] z-50`}
       >
@@ -51,8 +51,8 @@ const EmployeeSider = () => {
                 to="/admin-dashboard"
                 className="flex flex-col items-center py-3"
               >
-                <BsHouse className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
+                <BsHouse className="text-[white]  text-2xl md:text-3xl" />
+                <h3 className="text-xs max-md:pt-3 lg:inline text-[white]  md:text-base">
                   Dashboard
                 </h3>
               </Link>
@@ -60,67 +60,56 @@ const EmployeeSider = () => {
 
        
             {/* <hr className="w-full border-gray-400" /> */}
-            <li className={`xl:w-full ${getSidebarClass("/categories")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/admin-dashbord")}`}>
               <Link
-                to="/categories"
+                to="/admin-dashbord"
                 className="flex flex-col items-center py-3"
               >
-                <FaUserCircle className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
-                Categories
+                <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
+                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
+               Dashboard
                 </h3>
               </Link>
             </li>
        
             <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/sub-categories")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/task-management")}`}>
               <Link
-                to="/sub-categories"
+                to="/task-management"
                 className="flex flex-col items-center py-3"
               >
-                <FaUserCircle className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
-               Sub Categories
+                <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
+                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
+               Task Management 
                 </h3>
               </Link>
             </li>
        
             <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/items")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/task-history")}`}>
               <Link
-                to="/items"
+                to="/task-history"
                 className="flex flex-col items-center py-3"
               >
-                <FaUserCircle className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
-                 Items
+                <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
+                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
+                Task History
                 </h3>
               </Link>
             </li>
             <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/user-management")}`}>
+            <li className={`xl:w-full ${getSidebarClass("/employee-management")}`}>
               <Link
-                to="/user-management"
+                to="/employee-management"
                 className="flex flex-col items-center py-3"
               >
-                <FaUserCircle className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
-                 User Management 
+                <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
+                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
+                 Employee Management 
                 </h3>
               </Link>
             </li>
-            <hr className="w-full border-gray-400" />
-            <li className={`xl:w-full ${getSidebarClass("/discount-bar")}`}>
-              <Link
-                to="/discount-bar"
-                className="flex flex-col items-center py-3"
-              >
-                <FaUserCircle className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
-                 Discount Bar
-                </h3>
-              </Link>
-            </li>
+           
        
             <hr className="w-full border-gray-400" />
             <li className={`xl:w-full ${getSidebarClass("/admin-profile")}`}>
@@ -128,8 +117,8 @@ const EmployeeSider = () => {
                 to="/admin-profile"
                 className="flex flex-col items-center py-3"
               >
-                <FaUserCircle className="text-[#ffce08]  text-2xl md:text-3xl" />
-                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[#ffce08]  md:text-base">
+                <FaUserCircle className="text-[white]  text-2xl md:text-3xl" />
+                <h3 className="text-xs text-center max-md:pt-3 lg:inline text-[white]  md:text-base">
                  Admin Profile
                 </h3>
               </Link>

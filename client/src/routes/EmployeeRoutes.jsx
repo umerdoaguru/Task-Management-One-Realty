@@ -5,6 +5,8 @@ import { useSelector } from "react-redux";
 
 
 import UserAccount from "../components/Employee/UserAccount";
+import MainHeader from "../pages/MainHeader";
+import EmployeeSider from "../components/Employee/EmployeeSider";
 
 
 
@@ -16,6 +18,8 @@ function EmployeeRoutes() {
   return (
     <>
       <div style={{ overflow: "hidden" }}>
+         <MainHeader/>
+   <EmployeeSider/>
         <Routes>
           {/* Admin routes */}
      

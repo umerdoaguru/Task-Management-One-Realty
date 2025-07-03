@@ -2,7 +2,7 @@ const express = require("express");
 const { db } = require("../db");
 const bcrypt = require("bcrypt");
 const JWT = require('jsonwebtoken');
-
+const nodemailer = require('nodemailer')
 
 const register = async (req, res) => {
   try {
@@ -282,83 +282,84 @@ const sendOtpSuperAdmin = (req, res) => {
 
         const OTP = generateOTP(6);    
 
-        // try {
-        //   const transporter = nodemailer.createTransport({
-        //     service: "Gmail",
-        //     auth: {
-        //       user: process.env.EMAILSENDER,
-        //       pass: process.env.EMAILPASSWORD,
-        //     },
-        //   });
+        try {
+          const transporter = nodemailer.createTransport({
+            service: "Gmail",
+            auth: {
+              user: process.env.EMAILSENDER,
+              pass: process.env.EMAILPASSWORD,
+            },
+          });
           
 
-        //   const mailOptions = {
-        //     from: process.env.EMAILSENDER,
-        //     to: email,
-        //     subject: "Password Reset OTP",
-        //     text: `Your OTP for password reset is: ${OTP}`,
-        //   };
+          const mailOptions = {
+            from: process.env.EMAILSENDER,
+            to: email,
+            subject: "Password Reset OTP",
+            text: `Your OTP for password reset is: ${OTP}`,
+          };
 
-        //   transporter.sendMail(mailOptions, (error, info) => {
-        //     if (error) {
-        //       console.error(error);
-        //       return res.status(500).json("An error occurred while sending the email.");
-        //     } else {
-        //       console.log("OTP sent:", info.response);
+          transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+              console.error(error);
+              return res.status(500).json("An error occurred while sending the email.");
+            } else {
+              console.log("OTP sent:", info.response);
 
-        //       const updateQuery = "INSERT INTO otpcollections (email, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = VALUES(code)";
-        //       db.query(updateQuery, [email, OTP], (upErr, upResult) => {
-        //         if (upErr) {
-        //           return res.status(400).json({ success: false, message: upErr.message });
-        //         }
-        //         return res.status(200).json({ message: "OTP sent successfully" });
-        //       });
-        //     }
-        //   });
-        // } catch (error) {
-        //   console.log(error);
-        //   return res.status(500).json("An error occurred.");
-        // }
-        try {
+              const updateQuery = "INSERT INTO otpcollections (email, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = VALUES(code)";
+              db.query(updateQuery, [email, OTP], (upErr, upResult) => {
+                if (upErr) {
+                  return res.status(400).json({ success: false, message: upErr.message });
+                }
+                return res.status(200).json({ message: "OTP sent successfully" });
+              });
+            }
+          });
+        } catch (error) {
+          console.log(error);
+          return res.status(500).json("An error occurred.");
+        }
+
+        // try {
             
-          const transporter = nodemailer.createTransport({
-           host: 'mail.one-realty.in',
-           port: 465,
-           secure: true, // Use SSL
-           auth: {
-            user: 'info@one-realty.in',
-            pass: 'onerealty@123',
-           },
-         });
+        //   const transporter = nodemailer.createTransport({
+        //    host: 'mail.one-realty.in',
+        //    port: 465,
+        //    secure: true, // Use SSL
+        //    auth: {
+        //     user: 'info@one-realty.in',
+        //     pass: 'onerealty@123',
+        //    },
+        //  });
             
       
-            const mailOptions = {
-              from: 'info@one-realty.in',
-              to: email,
-              subject: "Admin Password Reset OTP",
-              text: `Your OTP for password reset is: ${OTP}`,
-            };
+        //     const mailOptions = {
+        //       from: 'info@one-realty.in',
+        //       to: email,
+        //       subject: "Admin Password Reset OTP",
+        //       text: `Your OTP for password reset is: ${OTP}`,
+        //     };
       
-            transporter.sendMail(mailOptions, (error, info) => {
-              if (error) {
-                console.error(error);
-                return res.status(500).json("An error occurred while sending the email.");
-              } else {
-                console.log("OTP sent:", info.response);
+        //     transporter.sendMail(mailOptions, (error, info) => {
+        //       if (error) {
+        //         console.error(error);
+        //         return res.status(500).json("An error occurred while sending the email.");
+        //       } else {
+        //         console.log("OTP sent:", info.response);
       
-                const updateQuery = "INSERT INTO otpcollections (email, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = VALUES(code)";
-                db.query(updateQuery, [email, OTP], (upErr, upResult) => {
-                  if (upErr) {
-                    return res.status(400).json({ success: false, message: upErr.message });
-                  }
-                  return res.status(200).json({ message: "OTP sent successfully" });
-                });
-              }
-            });
-          } catch (error) {
-            console.log(error);
-            return res.status(500).json("An error occurred.");
-          }
+        //         const updateQuery = "INSERT INTO otpcollections (email, code) VALUES (?, ?) ON DUPLICATE KEY UPDATE code = VALUES(code)";
+        //         db.query(updateQuery, [email, OTP], (upErr, upResult) => {
+        //           if (upErr) {
+        //             return res.status(400).json({ success: false, message: upErr.message });
+        //           }
+        //           return res.status(200).json({ message: "OTP sent successfully" });
+        //         });
+        //       }
+        //     });
+        //   } catch (error) {
+        //     console.log(error);
+        //     return res.status(500).json("An error occurred.");
+        //   }
      
     }
     }

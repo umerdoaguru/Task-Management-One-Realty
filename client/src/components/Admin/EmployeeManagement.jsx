@@ -15,8 +15,7 @@ function EmployeeManagement() {
     const [employee, setEmployee] = useState([]);
 
     const [currentLead, setCurrentLead] = useState({
-      name : "", email : "", phone : "",password : "",roles : "",
-    
+      user_name : "", email : "", roles : "Employee",
     });
 
     const usertoken = useSelector((state) => state.auth.user);
@@ -70,7 +69,7 @@ function EmployeeManagement() {
     const handleCreateClick = () => {
       setIsEditing(false);
       setCurrentLead({
-         name : "", email : "", phone : "",password : "",roles : "",
+         user_name : "", email : "",roles : "Employee",
        
       });
       setShowPopup(true);
@@ -110,8 +109,8 @@ function EmployeeManagement() {
       let formErrors = {};
       let isValid = true;
   
-      if (!currentLead.name) {
-        formErrors.name = "Name is required";
+      if (!currentLead.user_name) {
+        formErrors.user_name = "Name is required";
         isValid = false;
       }
   
@@ -124,14 +123,7 @@ function EmployeeManagement() {
       }
       
   
-      if (!currentLead.phone) {
-        formErrors.phone = "Phone No is required";
-        isValid = false;
-      }
-      if (!currentLead.password) {
-        formErrors.password = "Password is required";
-        isValid = false;
-      }
+      
       if (!currentLead.roles) {
         formErrors.phone = "Role is required";
         isValid = false;
@@ -259,9 +251,7 @@ function EmployeeManagement() {
                     <th className="px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm border-y-2 border-gray-300 text-left">
                     Email Id
                     </th>
-                    <th className="px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm border-y-2 border-gray-300 text-left">
-                     Phone Number 
-                    </th>
+                
                     <th className="px-4 py-2 sm:px-6 sm:py-3 text-xs sm:text-sm border-y-2 border-gray-300 text-left">
                     Role 
                     </th>
@@ -298,17 +288,16 @@ function EmployeeManagement() {
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold">
                        {index + 1 + currentPage * leadsPerPage}
                         </td>
-                        <Link to={`/employee-alltask/${user.employeeId}`} className=''>
+                        <Link to={`/employee-alltask/${user.user_id}`} className=''>
                         <td className="px-6 py-4 border-b border-gray-200 font-semibold underline text-[blue]">
-                          {user.name}
+                          {user.user_name}
                         </td>
                         </Link>
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold text-wrap">
                           {user.email}
                         </td>
-                        <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold text-wrap">
-                          {user.phone}
-                        </td>
+                        
+
                         <td className="px-6 py-4 border-b border-gray-200 text-gray-800 font-semibold text-wrap">
                           {user.roles}
                         </td>
@@ -379,8 +368,8 @@ function EmployeeManagement() {
                     <label className="block text-gray-700">Name</label>
                     <input
                       type="text"
-                      name="name"
-                      value={currentLead.name}
+                      name="user_name"
+                      value={currentLead.user_name}
                       onChange={handleInputChange}
                       className={`w-full px-3 py-2 border ${
                         errors.name ? "border-red-500" : "border-gray-300"
@@ -408,44 +397,15 @@ function EmployeeManagement() {
                   </div>
                 
                 
-                <div className="mb-4">
-                    <label className="block text-gray-700">Phone Number</label>
-                    <input
-                      type="text"
-                      name="phone"
-                      value={currentLead.phone}
-                      onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border ${
-                        errors.phone ? "border-red-500" : "border-gray-300"
-                      } rounded`}
-                    />
-                     {errors.phone && (
-                    <span className="text-red-500">{errors.phone}</span>
-                  )}
-                  </div>
-                  
-                <div className="mb-4">
-                    <label className="block text-gray-700">Password</label>
-                    <input
-                      type="text"
-                      name="password"
-                      value={currentLead.password}
-                      onChange={handleInputChange}
-                      className={`w-full px-3 py-2 border ${
-                        errors.password ? "border-red-500" : "border-gray-300"
-                      } rounded`}
-                    />
-                     {errors.password && (
-                    <span className="text-red-500">{errors.password}</span>
-                  )}
-                  </div>
+              
+            
                 <div className="mb-4">
                     <label className="block text-gray-700">Role</label>
                     <input
                       type="text"
                       name="roles"
                       value={currentLead.roles}
-                      onChange={handleInputChange}
+                      // onChange={handleInputChange}
                       className={`w-full px-3 py-2 border ${
                         errors.roles ? "border-red-500" : "border-gray-300"
                       } rounded`}
