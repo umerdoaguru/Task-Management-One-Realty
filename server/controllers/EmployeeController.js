@@ -90,4 +90,14 @@ const getTaskDetails = (req, res) => {
   });
 };
 
-module.exports = {createEmployee,getalluserdata,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails,getTaskDetails}
+// Get One Employee
+const getEmployeeByIdOfTask = (req, res) => {
+  const id = req.params.id;
+  db.query("SELECT * FROM task_priorities WHERE employeeId = ?", [id], (err, results) => {
+    if (err) return res.status(500).json({ error: err });
+    if (results.length === 0) return res.status(404).json({ message: "Employee not found" });
+    res.json(results);
+  });
+};
+
+module.exports = {createEmployee,getalluserdata,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails,getTaskDetails,getEmployeeByIdOfTask}

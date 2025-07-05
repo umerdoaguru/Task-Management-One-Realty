@@ -6,8 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { BsPencilSquare, BsTrash } from "react-icons/bs";
 import ReactPaginate from "react-paginate";
 import { useSelector } from "react-redux";
-import AdminSider from "./AdminSider";
-import MainHeader from "./../../pages/MainHeader";
+
 import cogoToast from "cogo-toast";
 
 function TaskMangement() {
@@ -256,8 +255,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
 
   return (
     <>
-      <MainHeader />
-      <AdminSider />
+    
       <>
         <div className="2xl:w-[89%]  2xl:ml-40 mx-4 ">
           <div className="main  mt-[6rem]">
