@@ -51,7 +51,7 @@ function EmployeeDashboard() {
 
   return (
     <div className="2xl:w-[89%] 2xl:ml-40 p-6 mt-20">
-      <h1 className="text-3xl font-bold mb-6 text-center text-blue-800">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold mb-6 text-center text-blue-800">Employee Dashboard</h1>
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-10">

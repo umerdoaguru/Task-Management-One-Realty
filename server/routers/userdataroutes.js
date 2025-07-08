@@ -1,6 +1,6 @@
 const express = require("express");
 
-const { user_data, register, login, getuserdata, sendOtpSuperAdmin, verifyOtpSuperAdmin, resetPasswordSuperAdmin, deleteContatct, createTask, getAllTasks, getTaskById, updateTask, deleteTask, getAllTasksWithPriorities, getAllTasksByEmployee, getAllTasksList } = require("../controllers/UserController");
+const { user_data, register, login, getuserdata, sendOtpSuperAdmin, verifyOtpSuperAdmin, resetPasswordSuperAdmin, deleteContatct, createTask, getAllTasks, getTaskById, updateTask, deleteTask, getAllTasksWithPriorities, getAllTasksByEmployee, getAllTasksList} = require("../controllers/UserController");
 const authenticate = require("../Middleware/authMiddleware");
 const { getAllTaskDetails, getTaskDetails } = require("../controllers/EmployeeController");
 const router = express.Router();
@@ -35,5 +35,6 @@ router.get("/tasks-history", getAllTasksWithPriorities);
 router.get("/tasks-employee/:id", getAllTasksByEmployee);
 
 router.get("/all-tasks", getAllTasksList);
+
 
 module.exports = router;

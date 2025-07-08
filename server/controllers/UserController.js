@@ -697,5 +697,7 @@ const getAllTasksList = (req, res) => {
 };
 
 
+
+
   
-  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities,getAllTasksByEmployee,getAllTasksList};
+  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities,getAllTasksByEmployee,getAllTasksList,};

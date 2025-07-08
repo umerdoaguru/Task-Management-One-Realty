@@ -100,4 +100,69 @@ const getEmployeeByIdOfTask = (req, res) => {
   });
 };
 
-module.exports = {createEmployee,getalluserdata,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails,getTaskDetails,getEmployeeByIdOfTask}
+// Update Employee Task
+const updateTaskEmployee = (req, res) => {
+  const id = req.params.id;
+  const { priority_item,status } = req.body;
+  const sql = "UPDATE task_priorities SET priority_item = ?, status = ? WHERE id = ?";
+  db.query(sql, [priority_item,status,id], (err) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json({ message: "Employee Task updated" });
+  });
+};
+const getAllTasksWithPrioritiesByEmployee = (req, res) => {
+  const {employeeId} = req.params
+  const sql = `             
+    SELECT 
+      t.id AS task_id,
+      t.title,
+      t.assigned_to,
+      t.due_date,
+      t.priority,
+      t.created_at,
+      p.id AS priority_id,
+      p.priority_item,
+      p.status
+    FROM tasks t
+    LEFT JOIN task_priorities p ON t.id = p.task_id WHERE t.employeeId = ?
+  `;
+
+  db.query(sql,[employeeId], (err, result) => {
+    if (err) {
+      console.error("Error fetching tasks:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
+
+    // Format the result: group priorities under each task
+    const taskMap = {};
+
+    result.forEach(row => {
+      const taskId = row.task_id;
+
+      if (!taskMap[taskId]) {
+        taskMap[taskId] = {
+          id: taskId,
+          title: row.title,
+          assigned_to: row.assigned_to,
+          due_date: row.due_date,
+          priority: row.priority,
+          created_at: row.created_at,
+          priorities: [],
+        }; 
+      }
+
+      if (row.priority_id) {
+        taskMap[taskId].priorities.push({
+          id: row.priority_id,
+          priority_item: row.priority_item,
+          status: row.status,
+        });
+      }
+    });
+
+    const finalResult = Object.values(taskMap);
+    res.json(finalResult);
+  });
+};
+
+module.exports = {createEmployee,getalluserdata,updateEmployee,deleteEmployee,getAllEmployees,getEmployeeById,getAllTaskDetails,getTaskDetails,getEmployeeByIdOfTask,updateTaskEmployee,getAllTasksWithPrioritiesByEmployee}
