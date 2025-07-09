@@ -41,7 +41,7 @@ function EmployeeManagement() {
     const fetchEmployee = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:9000/api/employees",
+          "https://task.dentalguru.software/api/employees",
           {
             headers: {
               'Content-Type': 'application/json',
@@ -93,7 +93,7 @@ function EmployeeManagement() {
       );
       if (isConfirmed) {
         try {
-          await axios.delete(`http://localhost:9000/api/employees/${id}`,
+          await axios.delete(`https://task.dentalguru.software/api/employees/${id}`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -150,7 +150,7 @@ function EmployeeManagement() {
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `http://localhost:9000/api/employees/${currentLead.id}`,
+              `https://task.dentalguru.software/api/employees/${currentLead.id}`,
               EmployeeData,
               {
                 headers: {
@@ -162,7 +162,7 @@ function EmployeeManagement() {
             closePopup();
           } else {
             // Create new lead
-            await axios.post("http://localhost:9000/api/employees", EmployeeData,
+            await axios.post("https://task.dentalguru.software/api/employees", EmployeeData,
               {
                 headers: {
                   'Content-Type': 'application/json',

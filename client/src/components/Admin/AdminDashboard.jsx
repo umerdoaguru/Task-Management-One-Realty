@@ -19,7 +19,7 @@ function AdminDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const taskRes = await axios.get("http://localhost:9000/api/tasks-details");
+      const taskRes = await axios.get("https://task.dentalguru.software/api/tasks-details");
       const tasks = taskRes.data;
       console.log(tasks);
       
@@ -31,7 +31,7 @@ function AdminDashboard() {
        (p => p.status === "completed").length;
       const pendingTasks = totalTasks - completedTasks;
 
-      const employeeRes = await axios.get("http://localhost:9000/api/employees");
+      const employeeRes = await axios.get("https://task.dentalguru.software/api/employees");
       const totalEmployees = employeeRes.data.length;
 
       setStats({ totalTasks, completedTasks, pendingTasks, totalEmployees });

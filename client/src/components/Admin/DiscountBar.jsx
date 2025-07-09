@@ -43,7 +43,7 @@ function DiscountBar() {
     const fetchDiscount = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:9000/api/discount",
+          "https://task.dentalguru.software/api/discount",
           {
             headers: {
               'Content-Type': 'application/json',
@@ -97,7 +97,7 @@ function DiscountBar() {
       );
       if (isConfirmed) {
         try {
-          await axios.delete(`http://localhost:9000/api/discount/${id}`,
+          await axios.delete(`https://task.dentalguru.software/api/discount/${id}`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -145,7 +145,7 @@ function DiscountBar() {
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `http://localhost:9000/api/discount/${currentdiscount.id}`,
+              `https://task.dentalguru.software/api/discount/${currentdiscount.id}`,
               DiscountData,
               {
                 headers: {
@@ -157,7 +157,7 @@ function DiscountBar() {
             closePopup();
           } else {
             // Create new lead
-            await axios.post("http://localhost:9000/api/discount", DiscountData,
+            await axios.post("https://task.dentalguru.software/api/discount", DiscountData,
               {
                 headers: {
                   'Content-Type': 'application/json',

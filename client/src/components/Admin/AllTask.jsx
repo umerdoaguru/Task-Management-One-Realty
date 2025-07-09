@@ -12,7 +12,7 @@ function AllTask() {
   }, []);
  const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/all-tasks`);
+      const response = await axios.get(`https://task.dentalguru.software/api/all-tasks`);
       const allTasks = response.data;
       setTasks(allTasks);
     } catch (err) {

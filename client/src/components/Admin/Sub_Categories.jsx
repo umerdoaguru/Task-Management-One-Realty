@@ -42,7 +42,7 @@ function Sub_Categories() {
     const fetchSubCategories = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:9000/api/subcategories",
+          "https://task.dentalguru.software/api/subcategories",
           {
             headers: {
               'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ function Sub_Categories() {
     };
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:9000/api/categories",
+        const response = await axios.get("https://task.dentalguru.software/api/categories",
           {
             headers: {
               'Content-Type': 'application/json',
@@ -120,7 +120,7 @@ function Sub_Categories() {
       );
       if (isConfirmed) {
         try {
-          await axios.delete(`http://localhost:9000/api/subcategories/${id}`,
+          await axios.delete(`https://task.dentalguru.software/api/subcategories/${id}`,
             {
               headers: {
                 'Content-Type': 'application/json',
@@ -170,7 +170,7 @@ function Sub_Categories() {
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `http://localhost:9000/api/subcategories/${currentLead.subcategory_id}`,
+              `https://task.dentalguru.software/api/subcategories/${currentLead.subcategory_id}`,
               leadData,
               {
                 headers: {
@@ -182,7 +182,7 @@ function Sub_Categories() {
             closePopup();
           } else {
             // Create new lead
-            await axios.post("http://localhost:9000/api/subcategories", leadData,
+            await axios.post("https://task.dentalguru.software/api/subcategories", leadData,
               {
                 headers: {
                   'Content-Type': 'application/json',

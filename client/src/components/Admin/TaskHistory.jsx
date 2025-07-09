@@ -10,7 +10,7 @@ function TaskHistory() {
 
   const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/api/tasks-history");
+      const response = await axios.get("https://task.dentalguru.software/api/tasks-history");
       const allTasks = response.data;
 
       const completed = allTasks

@@ -19,7 +19,7 @@ function AssignedTask() {
   }, []);
  const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/assign-employee/${employeedata.id}`);
+      const response = await axios.get(`https://task.dentalguru.software/api/assign-employee/${employeedata.id}`);
       const allTasks = response.data;
       setTasks(allTasks);
       console.log(tasks)
@@ -52,7 +52,7 @@ setShowPopup(true)
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `http://localhost:9000/api/edit-employee-task/${currentLead.id}`,
+              `https://task.dentalguru.software/api/edit-employee-task/${currentLead.id}`,
               currentLead
             );
             fetchTaskHistory(); // Refresh the list

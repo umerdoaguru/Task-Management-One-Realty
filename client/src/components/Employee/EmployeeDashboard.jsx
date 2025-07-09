@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { FaTasks, FaUserTie, FaClipboardCheck, FaClipboardList, FaPlusCircle } from "react-icons/fa";
+import { FaTasks, FaUserTie, FaClipboardCheck, FaClipboardList, FaPlusCircle, FaUser, FaList } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 
@@ -23,7 +23,7 @@ function EmployeeDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const taskRes = await axios.get(`http://localhost:9000/api/employees-task/${employeedata.id}`);
+      const taskRes = await axios.get(`https://task.dentalguru.software/api/employees-task/${employeedata.id}`);
       const tasks = taskRes.data;
       console.log(tasks);
       
@@ -35,7 +35,7 @@ function EmployeeDashboard() {
        (p => p.status === "completed").length;
       const pendingTasks = totalTasks - completedTasks;
 
-      const employeeRes = await axios.get("http://localhost:9000/api/employees");
+      const employeeRes = await axios.get("https://task.dentalguru.software/api/employees");
       const totalEmployees = employeeRes.data.length;
 
       setStats({ totalTasks, completedTasks, pendingTasks, totalEmployees });
@@ -63,9 +63,9 @@ function EmployeeDashboard() {
 
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <QuickLink title="Add Task" icon={<FaPlusCircle />} url="/task-management" />
-        <QuickLink title="All Tasks" icon={<FaTasks />} url="/task-list" />
-        <QuickLink title="Manage Employees" icon={<FaUserTie />} url="/employee-management" />
+        <QuickLink title="Profile" icon={<FaUser />} url="/task-management" />
+        <QuickLink title="Task History" icon={<FaTasks />} url="/task-history" />
+        <QuickLink title="Assigned Task" icon={<FaList />} url="/assigned-task" />
       </div>
 
       {/* Recent Tasks Table */}

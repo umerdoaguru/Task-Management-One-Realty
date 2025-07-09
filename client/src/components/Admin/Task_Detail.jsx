@@ -29,7 +29,7 @@ const Task_Detail = () => {
 
   const fetchTaskDetail = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/tasks-details/${id}`,
+      const response = await axios.get(`https://task.dentalguru.software/api/tasks-details/${id}`,
         {
           headers: {
             'Content-Type': 'application/json',

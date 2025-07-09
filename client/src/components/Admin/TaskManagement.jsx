@@ -46,7 +46,7 @@ function TaskMangement() {
 
   const fetchTask = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/api/tasks", {
+      const response = await axios.get("https://task.dentalguru.software/api/tasks", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -60,7 +60,7 @@ function TaskMangement() {
   };
     const fetchEmployees = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/api/employees",
+      const response = await axios.get("https://task.dentalguru.software/api/employees",
         {
           headers: {
             'Content-Type': 'application/json',
@@ -122,7 +122,7 @@ function TaskMangement() {
     );
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:9000/api/tasks/${id}`, {
+        await axios.delete(`https://task.dentalguru.software/api/tasks/${id}`, {
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
@@ -194,7 +194,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
         if (isEditing) {
           // Update existing lead
           await axios.put(
-            `http://localhost:9000/api/tasks/${currentLead.id}`,
+            `https://task.dentalguru.software/api/tasks/${currentLead.id}`,
             taskData,
             {
               headers: {
@@ -208,7 +208,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
         } else {
           // Create new lead
           await axios.post(
-            "http://localhost:9000/api/tasks  ",
+            "https://task.dentalguru.software/api/tasks  ",
             taskData,
             {
               headers: {

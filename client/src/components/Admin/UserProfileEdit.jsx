@@ -56,7 +56,7 @@ function UserProfileEdit(){
     const fetchUser = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:9000/api/user-profile-data/${id}`,
+          `https://task.dentalguru.software/api/user-profile-data/${id}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -73,7 +73,7 @@ function UserProfileEdit(){
     const fetchUserSelection = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:9000/api/user-selection-by-userid-data/${id}`,
+          `https://task.dentalguru.software/api/user-selection-by-userid-data/${id}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -149,14 +149,14 @@ function UserProfileEdit(){
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `http://localhost:9000/api/user-profile/${currentLead.user_id}`,
+              `https://task.dentalguru.software/api/user-profile/${currentLead.user_id}`,
               UserProfileData
             );
             fetchUser(); // Refresh the list
             closePopup();
           } else {
             // Create new lead
-            await axios.post("http://localhost:9000/api/user-register", UserProfileData);
+            await axios.post("https://task.dentalguru.software/api/user-register", UserProfileData);
     
             // Construct WhatsApp message link with encoded parameters
          

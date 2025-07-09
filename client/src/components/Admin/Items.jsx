@@ -44,7 +44,7 @@ function items() {
   const fetchSubCategories = async () => {
     try {
       const response = await axios.get(
-        "http://localhost:9000/api/subcategories",
+        "https://task.dentalguru.software/api/subcategories",
         {
           headers: {
             'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ function items() {
   };
   const fetchItems = async () => {
     try {
-      const response = await axios.get("http://localhost:9000/api/items",
+      const response = await axios.get("https://task.dentalguru.software/api/items",
         {
           headers: {
             'Content-Type': 'application/json',
@@ -139,7 +139,7 @@ function items() {
     );
     if (isConfirmed) {
       try {
-        await axios.delete(`http://localhost:9000/api/items/${item_id}`,
+        await axios.delete(`https://task.dentalguru.software/api/items/${item_id}`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -217,7 +217,7 @@ function items() {
       if (isEditing) {
         // Update existing lead
         await axios.put(
-          `http://localhost:9000/api/items/${currentLead.item_id}`,
+          `https://task.dentalguru.software/api/items/${currentLead.item_id}`,
           formData,
           {
             headers: { "Content-Type": "multipart/form-data" ,'Authorization': `Bearer ${token}` },
@@ -227,7 +227,7 @@ function items() {
         fetchItems(); // Refresh the list
       } else {
         // Create new lead
-        await axios.post("http://localhost:9000/api/items", formData, {
+        await axios.post("https://task.dentalguru.software/api/items", formData, {
           headers: { "Content-Type": "multipart/form-data"  ,'Authorization': `Bearer ${token}`},
         });
         fetchItems(); // Refresh the list

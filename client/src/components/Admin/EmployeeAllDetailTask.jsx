@@ -12,7 +12,7 @@ function EmployeeAllDetailTask() {
   }, []);
  const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get(`http://localhost:9000/api/tasks-employee/${id}`);
+      const response = await axios.get(`https://task.dentalguru.software/api/tasks-employee/${id}`);
       const allTasks = response.data;
       setTasks(allTasks);
     } catch (err) {
