@@ -46,7 +46,7 @@ function TaskMangement() {
 
   const fetchTask = async () => {
     try {
-      const response = await axios.get("https://task.dentalguru.software/api/tasks", {
+      const response = await axios.get("https://task.dentalguru.software/api/all-tasks", {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -112,9 +112,13 @@ function TaskMangement() {
     setIsEditing(true);
     setCurrentLead({
       ...task,
+      due_date: moment(task.due_date).format("YYYY-MM-DD"), // Format the due_date
     });
+
+    
     setShowPopup(true);
   };
+console.log(currentLead);
 
   const handleDeleteClick = async (id) => {
     const isConfirmed = window.confirm(
@@ -414,7 +418,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
       <div className="mb-4">
         <label className="block text-gray-700">Assigned To</label>
          <select
-                       type="text"
+          type="text"
           name="assigned_to"
           value={currentLead.assigned_to}
           onChange={handleInputChange}
@@ -454,6 +458,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
       </div>
 
       {/* Dynamic Priority Fields Section */}
+           {isEditing ? '' : 
       <div className="mb-4">
         <div className="flex justify-between items-center mb-2">
           <label className="block text-gray-700">Task Priorities</label>
@@ -465,7 +470,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
             + Add Priority
           </button>
         </div>
-        
+   
         {priorityFields.map((field, index) => (
           <div key={field.id} className="flex items-center mb-2">
             <input
@@ -484,7 +489,7 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
             </button>
           </div>
         ))}
-      </div>
+      </div>}
 
       <div className="mb-4">
         <label className="block text-gray-700">Assign Date</label>

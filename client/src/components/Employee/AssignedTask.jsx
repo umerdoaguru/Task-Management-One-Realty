@@ -78,13 +78,8 @@ setShowPopup(true)
   return (
     <>
 
-    <div className="container 2xl:w-[89%] 2xl:ml-40 mt-20 p-4">
-           <button
-            onClick={handlenavigateback}
-            className="bg-blue-500 text-white mt-5 px-4 py-2 rounded"
-          >
-            Go Back
-          </button>
+    <div className="container 2xl:w-[89%] 2xl:ml-40 mt-24 p-4">
+         
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task Assigned Dashboard of {employeedata.name}</h2>
 
       {tasks.length === 0 ? (
