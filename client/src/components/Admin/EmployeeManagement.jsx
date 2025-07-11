@@ -85,6 +85,7 @@ function EmployeeManagement() {
       });
       setShowPopup(true);
     };
+    console.log(currentLead);
   
   
     const handleDeleteClick = async (id) => {
@@ -150,7 +151,7 @@ function EmployeeManagement() {
           if (isEditing) {
             // Update existing lead
             await axios.put(
-              `https://task.dentalguru.software/api/employees/${currentLead.id}`,
+              `https://task.dentalguru.software/api/employees/${currentLead.user_id}`,
               EmployeeData,
               {
                 headers: {
@@ -315,7 +316,7 @@ function EmployeeManagement() {
                           </button>
                           <button
                             className="text-red-500 hover:text-red-700 mx-2"
-                            onClick={() => handleDeleteClick(user.employeeId)}
+                            onClick={() => handleDeleteClick(user.user_id)}
                           >
                             <BsTrash size={20} />
                           </button>

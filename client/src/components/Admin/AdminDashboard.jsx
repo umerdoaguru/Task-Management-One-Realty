@@ -74,18 +74,18 @@ function AdminDashboard() {
             <table className="min-w-full table-auto">
               <thead className="bg-gray-100 text-left">
                 <tr>
-                  <th className="px-4 py-2">Task Id</th>
+                  <th className="px-4 py-2">S.no</th>
                   <th className="px-4 py-2">Priorirty</th>
                   <th className="px-4 py-2">Status</th>
                   <th className="px-4 py-2">Due Date</th>
                 </tr>
               </thead>
               <tbody>
-                {recentTasks.map(task => {
+                {recentTasks.map((task, index) => {
                   
                   return (
                     <tr key={task.id} className="border-t">
-                      <td className="px-4 py-2 font-semibold">{task.task_id}</td>
+                      <td className="px-4 py-2 font-semibold">{index +1 }</td>
                       <td className="px-4 py-2">{task.priority_item}</td>
                       <td className="px-4 py-2">
                          <span className={task.status === "completed" ? "bg-green-600 text-white rounded-full p-1" : "bg-yellow-600 text-white rounded-full p-1"}>

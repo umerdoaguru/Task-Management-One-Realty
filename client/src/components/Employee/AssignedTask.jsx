@@ -80,7 +80,7 @@ setShowPopup(true)
 
     <div className="container 2xl:w-[89%] 2xl:ml-40 mt-24 p-4">
          
-      <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task Assigned Dashboard of {employeedata.name}</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task Assigned Dashboard </h2>
 
       {tasks.length === 0 ? (
         <p className="text-center text-gray-500">No tasks found.</p>

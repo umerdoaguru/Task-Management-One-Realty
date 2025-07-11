@@ -76,7 +76,7 @@ const Task_Detail = () => {
        
         <div className="w-full px-2 mx-auto p-4">
           <div className="w-full px-2 mt-4">
-            <h2 className="text-2xl font-bold mb-4 text-center">All task</h2>
+            <h2 className="text-2xl font-bold mb-4 text-center">All tasks</h2>
             <div className=" overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200 border border-gray-300">
                 <thead className="bg-gray-100">
@@ -84,10 +84,7 @@ const Task_Detail = () => {
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       S.no
                     </th>
-                   
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                      Task Id
-                    </th>
+               
                     <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Priority item
                     </th>
@@ -105,7 +102,7 @@ const Task_Detail = () => {
                   {currenttask.map((task, index) => (
                     <tr key={task.id}>
                       <td className="px-6 py-4 whitespace-nowrap">{offset + index + 1}</td>
-                      <td className="px-6 py-4 whitespace-nowrap">{task.task_id}</td>
+                      
                 
                       <td className="px-6 py-4 whitespace-nowrap">{task.priority_item}</td>
                       <td className="px-6 py-4 whitespace-nowrap">{task.status}</td>
