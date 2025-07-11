@@ -13,6 +13,8 @@ import TaskHistory from "../components/Admin/TaskHistory";
 import AdminDashboard from "../components/Admin/AdminDashboard";
 import EmployeeAllDetailTask from "../components/Admin/EmployeeAllDetailTask";
 import AllTask from "../components/Admin/AllTask";
+import TaskMangementDash from "../components/Admin/TaskMangementDash";
+import EmployeeManaDash from "../components/Admin/EmployeeManaDash";
 
 
 
@@ -29,7 +31,9 @@ function AdminRoutes() {
         <Route path="/" element={<AdminDashboard />} />
         <Route path="/admin-dashbord" element={<AdminDashboard/>} />
         <Route path="/task-management" element={<TaskManagement/>} />
+        <Route path="/task-management-dash" element={<TaskMangementDash/>} />
         <Route path="/employee-management" element={<EmployeeManagement/>} />
+        <Route path="/employee-management-dash" element={<EmployeeManaDash/>} />
         <Route path="/admin-profile" element={<AdminProfile />} />
         <Route path="/task-details/:id" element={<Task_Detail />} />
         <Route path="/task-history" element={<TaskHistory />} />

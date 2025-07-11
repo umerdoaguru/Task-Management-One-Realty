@@ -63,9 +63,9 @@ function EmployeeDashboard() {
 
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <QuickLink title="Profile" icon={<FaUser />} url="/employee-profile" />
-        <QuickLink title="Task History" icon={<FaTasks />} url="/task-history" />
-        <QuickLink title="Assigned Task" icon={<FaList />} url="/assigned-task" />
+        <QuickLink title="Profile" icon={<FaUser />} url="/employee-profile-dash" />
+        <QuickLink title="Task History" icon={<FaTasks />} url="/task-history-dash" />
+        <QuickLink title="Assigned Task" icon={<FaList />} url="/assigned-task-dash" />
       </div>
 
       {/* Recent Tasks Table */}

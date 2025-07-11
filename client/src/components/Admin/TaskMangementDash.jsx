@@ -9,7 +9,7 @@ import { useSelector } from "react-redux";
 
 import cogoToast from "cogo-toast";
 
-function TaskMangement() {
+function TaskMangementDash() {
   const navigate = useNavigate();
   const [task, setTasks] = useState([]);
   const [employees, setEmployees] = useState([]);
@@ -195,8 +195,6 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
 
       try {
         setLoading(true);
-        
-        
         if (isEditing) {
           // Update existing lead
           await axios.put(
@@ -264,7 +262,14 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
     
       <>
         <div className="2xl:w-[89%]  2xl:ml-40 mx-4 ">
+          
           <div className="main  mt-[6rem]">
+              <button
+            onClick={() => navigate(-1)}
+            className="bg-blue-500 text-white mt-5 px-4 py-2 rounded"
+          >
+            Go Back
+          </button>
             <h1 className="text-2xl text-center font-medium">
               Task Management
             </h1>
@@ -532,5 +537,5 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
   );
 }
 
-export default TaskMangement;
+export default TaskMangementDash;
 

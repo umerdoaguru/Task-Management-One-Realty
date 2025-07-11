@@ -490,34 +490,16 @@ const getTaskById = (req, res) => {
 // Update Task
 const updateTask = (req, res) => {
   const taskId = req.params.id;
-  const { title, assigned_to, due_date, priority, taskpriorities } = req.body;
+  const { title, assigned_to, due_date, priority} = req.body;
 
   const updateSql = "UPDATE tasks SET title = ?, assigned_to = ?, due_date = ?, priority = ? WHERE id = ?";
   const values = [title, assigned_to, due_date, priority, taskId];
-
-  db.query(updateSql, values, (err) => {
+ 
+  db.query(updateSql,values, (err) => {
     if (err) return res.status(500).json({ error: err });
-
-    // Delete old priorities
-    const deletePrioritySql = "DELETE FROM task_priorities WHERE task_id = ?";
-    db.query(deletePrioritySql, [taskId], (err2) => {
-      if (err2) return res.status(500).json({ error: err2 });
-
-      // Insert new priorities
-      if (taskpriorities && taskpriorities.length > 0) {
-        const insertPrioritySql = "INSERT INTO task_priorities (task_id, priority_item) VALUES ?";
-        const priorityValues = taskpriorities.map(item => [taskId, item]);
-
-        db.query(insertPrioritySql, [priorityValues], (err3) => {
-          if (err3) return res.status(500).json({ error: err3 });
-
-          res.json({ message: "Task updated successfully" });
-        });
-      } else {
-        res.json({ message: "Task updated successfully without priorities" });
-      }
-    });
+    res.json({ message: "Task updated" });
   });
+ 
 };
 
 // Delete Task

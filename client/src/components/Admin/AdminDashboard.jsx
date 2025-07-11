@@ -59,9 +59,9 @@ function AdminDashboard() {
 
       {/* Quick Links */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
-        <QuickLink title="Add Task" icon={<FaPlusCircle />} url="/task-management" />
+        <QuickLink title="Add Task" icon={<FaPlusCircle />} url="/task-management-dash" />
         <QuickLink title="All Tasks" icon={<FaTasks />} url="/task-list" />
-        <QuickLink title="Manage Employees" icon={<FaUserTie />} url="/employee-management" />
+        <QuickLink title="Manage Employees" icon={<FaUserTie />} url="/employee-management-dash" />
       </div>
 
       {/* Recent Tasks Table */}
