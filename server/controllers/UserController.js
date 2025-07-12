@@ -490,82 +490,110 @@ const getTaskById = (req, res) => {
 // Update Task
 const updateTask = (req, res) => {
   const taskId = req.params.id;
-  const { title, assigned_to, due_date, priority} = req.body;
+  const { title, assigned_to, employeeId, due_date, priority } = req.body;
 
-  const updateSql = "UPDATE tasks SET title = ?, assigned_to = ?, due_date = ?, priority = ? WHERE id = ?";
-  const values = [title, assigned_to, due_date, priority, taskId];
- 
-  db.query(updateSql,values, (err) => {
+  // Update the task table
+  const updateSql = `
+    UPDATE tasks 
+    SET title = ?, assigned_to = ?, employeeId = ?, due_date = ?, priority = ? 
+    WHERE id = ?
+  `;
+  const values = [title, assigned_to, employeeId, due_date, priority, taskId];
+
+  db.query(updateSql, values, (err) => {
     if (err) return res.status(500).json({ error: err });
-    res.json({ message: "Task updated" });
+
+    // Also update employeeId in task_priorities table for the same task
+    const updatePrioritySql = `
+      UPDATE task_priorities 
+      SET employeeId = ? 
+      WHERE task_id = ?
+    `;
+
+    db.query(updatePrioritySql, [employeeId, taskId], (err2) => {
+      if (err2) return res.status(500).json({ error: err2 });
+
+      res.json({ message: "Task and task priorities updated successfully" });
+    });
   });
- 
 };
+
 
 // Delete Task
 const deleteTask = (req, res) => {
   const taskId = req.params.id;
-  const sql = "DELETE FROM tasks WHERE id = ?";
 
-  db.query(sql, [taskId], (err) => {
-    if (err) return res.status(500).json({ error: err });
-    res.json({ message: "Task deleted successfully" });
-  });
-};
+  // Step 1: Delete related priorities first
+  const deletePrioritySql = "DELETE FROM task_priorities WHERE task_id = ?";
+  db.query(deletePrioritySql, [taskId], (err1) => {
+    if (err1) return res.status(500).json({ error: err1 });
 
-const getAllTasksWithPriorities = (req, res) => {
-  const sql = `
-    SELECT 
-      t.id AS task_id,
-      t.title,
-      t.assigned_to,
-      t.due_date,
-      t.priority,
-      t.created_at,
-      p.id AS priority_id,
-      p.priority_item,
-      p.status
-    FROM tasks t
-    LEFT JOIN task_priorities p ON t.id = p.task_id
-  `;
+    // Step 2: Delete the task
+    const deleteTaskSql = "DELETE FROM tasks WHERE id = ?";
+    db.query(deleteTaskSql, [taskId], (err2) => {
+      if (err2) return res.status(500).json({ error: err2 });
 
-  db.query(sql, (err, result) => {
-    if (err) {
-      console.error("Error fetching tasks:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
-    }
-
-    // Format the result: group priorities under each task
-    const taskMap = {};
-
-    result.forEach(row => {
-      const taskId = row.task_id;
-
-      if (!taskMap[taskId]) {
-        taskMap[taskId] = {
-          id: taskId,
-          title: row.title,
-          assigned_to: row.assigned_to,
-          due_date: row.due_date,
-          priority: row.priority,
-          created_at: row.created_at,
-          priorities: [],
-        }; 
-      }
-
-      if (row.priority_id) {
-        taskMap[taskId].priorities.push({
-          id: row.priority_id,
-          priority_item: row.priority_item,
-          status: row.status,
-        });
-      }
+      res.json({ message: "Task and its priorities deleted successfully" });
     });
-
-    const finalResult = Object.values(taskMap);
-    res.json(finalResult);
   });
 };
+
+
+  const getAllTasksWithPriorities = (req, res) => {
+    const sql = `
+      SELECT 
+        t.id AS task_id,
+        t.title,
+        t.assigned_to,
+        t.due_date,
+        t.priority,
+        t.created_at,
+        p.id AS priority_id,
+        p.priority_item,
+        p.status,
+        p.createdTime
+      FROM tasks t
+      LEFT JOIN task_priorities p ON t.id = p.task_id
+    `;
+
+    db.query(sql, (err, result) => {
+      if (err) {
+        console.error("Error fetching tasks:", err);
+        return res.status(500).json({ error: "Internal Server Error" });
+      }
+
+      // Format the result: group priorities under each task
+      const taskMap = {};
+
+      result.forEach(row => {
+        const taskId = row.task_id;
+
+        if (!taskMap[taskId]) {
+          taskMap[taskId] = {
+            id: taskId,
+            title: row.title,
+            assigned_to: row.assigned_to,
+            due_date: row.due_date,
+            priority: row.priority,
+            created_at: row.created_at,
+            priorities: [],
+          }; 
+        }
+
+        if (row.priority_id) {
+          taskMap[taskId].priorities.push({
+            id: row.priority_id,
+            priority_item: row.priority_item,
+            status: row.status,
+            createdTime: row.createdTime,
+          });
+        }
+      });
+
+      const finalResult = Object.values(taskMap);
+      res.json(finalResult);
+    });
+  };
 
 
 const getAllTasksByEmployee = (req, res) => {

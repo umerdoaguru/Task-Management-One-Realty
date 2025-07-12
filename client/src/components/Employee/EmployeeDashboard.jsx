@@ -23,7 +23,7 @@ function EmployeeDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const taskRes = await axios.get(`https://task.dentalguru.software/api/employees-task/${employeedata.id}`);
+      const taskRes = await axios.get(`https://task.dentalguru.software/api/tasks-employee/${employeedata.id}`);
       const tasks = taskRes.data;
       console.log(tasks);
       
@@ -75,35 +75,45 @@ function EmployeeDashboard() {
           <p className="text-gray-500">No recent tasks.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full table-auto">
-              <thead className="bg-gray-100 text-left">
-                <tr>
-                  <th className="px-4 py-2">S.no</th>
-                  <th className="px-4 py-2">Priorirty</th>
-                  <th className="px-4 py-2">Status</th>
-                  <th className="px-4 py-2">Due Date</th>
+          <table className="min-w-full bg-white border border-gray-200 rounded shadow-lg">
+            <thead>
+              <tr className="bg-blue-100 text-gray-800 text-sm">
+                <th className="px-4 py-3 text-left">S.No</th>
+                <th className="px-4 py-3 text-left">Title</th>
+                <th className="px-4 py-3 text-left">Assigned To</th>
+                <th className="px-4 py-3 text-left">Due Date</th>
+                <th className="px-4 py-3 text-left">Main Priority</th>
+   <th className="px-4 py-3 text-left">Priority Details</th>
+              </tr>
+            </thead>
+            <tbody>
+              {recentTasks.map((task, index) => (
+                <tr key={task.id} className="border-t border-gray-200 hover:bg-gray-50">
+                  <td className="px-4 py-3">{index + 1}</td>
+                  <td className="px-4 py-3 font-semibold text-blue-600">{task.title}</td>
+                  <td className="px-4 py-3">{task.assigned_to}</td>
+                  <td className="px-4 py-3">{new Date(task.due_date).toLocaleDateString()}</td>
+                  <td className="px-4 py-3">{task.priority}</td>
+                <td className="px-4 py-3">
+
+     <ul className="space-y-1 ">
+                      {task.task_priorities.map((p, idx) => (
+                        // <li key={idx}>✅ {p.priority_item}</li>
+                        <li key={idx} className="text-sm border-b pb-1">
+        <div><span className="font-semibold">Priority:</span> {p.priority_item}</div>
+        <div><span className="font-semibold">Status:</span> {p.status}</div>
+        <div><span className="font-semibold">Created:</span> {new Date(p.createdTime).toLocaleString()}</div>
+      </li>
+                      ))}
+                    </ul>
+
+</td>
+
                 </tr>
-              </thead>
-              <tbody>
-                {recentTasks.map((task, index) => {
-                  
-                  return (
-                    <tr key={task.id} className="border-t">
-                      <td className="px-4 py-2 font-semibold">{index+1}</td>
-                      <td className="px-4 py-2">{task.priority_item}</td>
-                      <td className="px-4 py-2">
-                         <span className={task.status === "completed" ? "bg-green-600 text-white rounded-full p-1" : "bg-yellow-600 text-white rounded-full p-1"}>
-    {task.status}
-  </span>
-                   
-                      </td>
-                      <td className="px-4 py-2">{new Date(task.createdTime).toLocaleDateString()}</td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+              ))}
+            </tbody>
+          </table>
+        </div>
         )}
       </div>
     </div>

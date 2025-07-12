@@ -33,7 +33,7 @@ function EmployeeAllDetailTask() {
           >
             Go Back
           </button>
-      <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task History of Employee of {}</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task History of Employee</h2>
 
       {tasks.length === 0 ? (
         <p className="text-center text-gray-500">No tasks found.</p>
