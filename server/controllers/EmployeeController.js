@@ -122,7 +122,8 @@ const getAllTasksWithPrioritiesByEmployee = (req, res) => {
       t.created_at,
       p.id AS priority_id,
       p.priority_item,
-      p.status
+      p.status,
+      p.file
     FROM tasks t
     LEFT JOIN task_priorities p ON t.id = p.task_id WHERE t.employeeId = ?
   `;
@@ -156,6 +157,7 @@ const getAllTasksWithPrioritiesByEmployee = (req, res) => {
           id: row.priority_id,
           priority_item: row.priority_item,
           status: row.status,
+          file: row.file,
         });
       }
     });

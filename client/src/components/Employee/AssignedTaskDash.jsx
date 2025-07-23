@@ -10,6 +10,7 @@ function AssignedTaskDash() {
     const [tasks, setTasks] = useState([]);
     const navigate = useNavigate();
  const employeedata  = useSelector(state => state.auth.user)
+  const token = employeedata?.token;
   const [currentLead, setCurrentLead] = useState({});
     const [showPopup, setShowPopup] = useState(false);
       const [loading , setLoading] = useState(false)
@@ -20,7 +21,12 @@ function AssignedTaskDash() {
   }, []);
  const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get(`https://task.dentalguru.software/api/assign-employee/${employeedata.id}`);
+      const response = await axios.get(`https://task.dentalguru.software/api/assign-employee/${employeedata.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const allTasks = response.data;
       setTasks(allTasks);
       console.log(tasks)

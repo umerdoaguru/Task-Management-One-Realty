@@ -8,11 +8,14 @@ import ReactPaginate from "react-paginate";
 import { useSelector } from "react-redux";
 
 import cogoToast from "cogo-toast";
+import { AiOutlineClose } from "react-icons/ai";
 
-function TaskMangementDash() {
+function TaskMangementDash()  {
   const navigate = useNavigate();
   const [task, setTasks] = useState([]);
   const [employees, setEmployees] = useState([]);
+  const [filterText, setFilterText] = useState('');
+
 
   const [currentLead, setCurrentLead] = useState({
     title: "",
@@ -140,21 +143,32 @@ console.log(currentLead);
   };
   const addPriorityField = () => {
   const newField = {
-    id: Date.now(), // Simple ID generation
-    value: ''
-  };
+  id: Date.now(),
+  value: '',
+  file: null
+};
+
   setPriorityFields([...priorityFields, newField]);
 };
 const removePriorityField = (fieldId) => {
   setPriorityFields(priorityFields.filter(field => field.id !== fieldId));
 };
 
-// Function to handle priority field value changes
+// Function to handle priority field value changes 
 const handlePriorityFieldChange = (fieldId, newValue) => {
   setPriorityFields(priorityFields.map(field => 
     field.id === fieldId ? { ...field, value: newValue } : field
   ));
 };
+
+const handleFileChange = (fieldId, file) => {
+  setPriorityFields(fields =>
+    fields.map(field =>
+      field.id === fieldId ? { ...field, file } : field
+    )
+  );
+};
+
   const validateForm = () => {
     let formErrors = {};
     let isValid = true;
@@ -183,40 +197,64 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
     return isValid;
   };
 
-  const saveChanges = async () => {
-    if (validateForm()) {
-      // const leadData = {
-      //   ...currentLead,
-      // };
-       const taskData = {
-    ...currentLead,
-    taskpriorities: priorityFields.map(field => field.value).filter(value => value.trim() !== '')
-  };
+const saveChanges = async () => {
+  if (validateForm()) {
+    const formData = new FormData();
+    formData.append("title", currentLead.title);
+    formData.append("assigned_to", currentLead.assigned_to);
+    formData.append("priority", currentLead.priority);
+    formData.append("due_date", currentLead.due_date);
+    formData.append("employeeId", currentLead.employeeId);
 
-      try {
+    const priorities = priorityFields.map(field => ({
+      value: field.value,
+    }));
+
+    formData.append("taskpriorities", JSON.stringify(priorities));
+
+    priorityFields.forEach(field => {
+      if (field.file) {
+        formData.append("files", field.file);
+      }
+    });
+
+  try {
         setLoading(true);
+        
+        
         if (isEditing) {
           // Update existing lead
+              const updateData = {
+          title: currentLead.title,
+          assigned_to: currentLead.assigned_to,
+          priority: currentLead.priority,
+          due_date: currentLead.due_date,
+          employeeId: currentLead.employeeId,
+        };
+        console.log(updateData);
+        
+
           await axios.put(
             `https://task.dentalguru.software/api/tasks/${currentLead.id}`,
-            taskData,
+            updateData,
             {
               headers: {
-                "Content-Type": "application/json",
+               "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
               },
             }
           );
           fetchTask(); // Refresh the list
+           setPriorityFields([]);
           closePopup();
         } else {
           // Create new lead
           await axios.post(
-            "https://task.dentalguru.software/api/tasks  ",
-            taskData,
+            "https://task.dentalguru.software/api/tasks",
+            formData,
             {
               headers: {
-                "Content-Type": "application/json",
+               "Content-Type": "multipart/form-data",
                 Authorization: `Bearer ${token}`,
               },
             }
@@ -225,7 +263,9 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
           // Construct WhatsApp message link with encoded parameters
 
           fetchTask(); // Refresh the list
+           setPriorityFields([]);
           closePopup();
+
         }
         setLoading(false);
       } catch (error) {
@@ -235,36 +275,43 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
         console.error("Error saving lead:", error);
       }
     }
-  };
+};
+
 
   const closePopup = () => {
     setShowPopup(false);
+     setPriorityFields([]);
     setErrors({});
   };
+const filteredTasks = task.filter((t) =>
+  (t.title || "").toLowerCase().includes((filterText || "").trim().toLowerCase()) ||
+  (t.assigned_to || "").toLowerCase().includes((filterText || "").trim().toLowerCase())
+);
+
 
   // Calculate total number of pages
-  const pageCount = Math.ceil(task.length / leadsPerPage);
+const pageCount = Math.ceil(filteredTasks.length / leadsPerPage);
 
   // Pagination logic
   const indexOfLastLead = (currentPage + 1) * leadsPerPage;
   const indexOfFirstLead = indexOfLastLead - leadsPerPage;
-  const currentLeads =
-    leadsPerPage === Infinity
-      ? task
-      : task.slice(indexOfFirstLead, indexOfLastLead);
+const currentLeads =
+  leadsPerPage === Infinity
+    ? filteredTasks
+    : filteredTasks.slice(indexOfFirstLead, indexOfLastLead);
 
   const handlePageClick = (data) => {
     setCurrentPage(data.selected);
   };
+  
 
   return (
     <>
     
       <>
         <div className="2xl:w-[89%]  2xl:ml-40 mx-4 ">
-          
           <div className="main  mt-[6rem]">
-              <button
+             <button
             onClick={() => navigate(-1)}
             className="bg-blue-500 text-white mt-5 px-4 py-2 rounded"
           >
@@ -285,6 +332,16 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
               </button>
             </div>
           </div>
+          <div className="mb-4">
+  <input
+    type="text"
+    placeholder="Search by Title or Employee..."
+    className="border border-gray-300 rounded px-4 py-2 w-full sm:w-1/3"
+    value={filterText}
+    onChange={(e) => setFilterText(e.target.value)}
+  />
+</div>
+
 
           <div className=" overflow-x-auto mt-4  ">
             <table className="min-w-full bg-white border">
@@ -480,6 +537,14 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
    
         {priorityFields.map((field, index) => (
           <div key={field.id} className="flex items-center mb-2">
+              <button
+              type="button"
+              onClick={() => removePriorityField(field.id)}
+              className="bg-red-500 text-white px-2 py-1 mx-1 rounded text-sm hover:bg-red-600"
+            >
+          
+          <AiOutlineClose/>
+            </button>
             <input
               type="text"
               value={field.value}
@@ -487,13 +552,14 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
               placeholder={`Priority ${index + 1}`}
               className="flex-1 px-3 py-2 border border-gray-300 rounded mr-2"
             />
-            <button
-              type="button"
-              onClick={() => removePriorityField(field.id)}
-              className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600"
-            >
-              Remove
-            </button>
+            <input
+  type="file"
+  accept="image/*,application/pdf"
+  onChange={(e) => handleFileChange(field.id, e.target.files[0])}
+  className="text-sm"
+/>
+
+       
           </div>
         ))}
       </div>}
@@ -536,6 +602,5 @@ const handlePriorityFieldChange = (fieldId, newValue) => {
     </>
   );
 }
-
 export default TaskMangementDash;
 

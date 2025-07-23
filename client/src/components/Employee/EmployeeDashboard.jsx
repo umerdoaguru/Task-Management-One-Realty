@@ -15,7 +15,9 @@ function EmployeeDashboard() {
   });
 
   const [recentTasks, setRecentTasks] = useState([]);
-  const employeedata = useSelector(state => state.auth.user)
+
+   const employeedata  = useSelector(state => state.auth.user)
+  const token = employeedata?.token;
 
   useEffect(() => {
     fetchDashboardData();
@@ -23,19 +25,40 @@ function EmployeeDashboard() {
 
   const fetchDashboardData = async () => {
     try {
-      const taskRes = await axios.get(`https://task.dentalguru.software/api/tasks-employee/${employeedata.id}`);
+      const taskRes = await axios.get(`https://task.dentalguru.software/api/tasks-employee/${employeedata.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const tasks = taskRes.data;
       console.log(tasks);
       
 
-      const totalTasks = tasks.length;
+      
+       const taskResCount = await axios.get(`https://task.dentalguru.software/api/employees-task/${employeedata.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      const tasksCount = taskResCount.data;
+
+      const totalTasks = tasksCount.length;
       console.log(totalTasks);
       
-      const completedTasks = tasks.filter
+      const completedTasks = tasksCount.filter
        (p => p.status === "completed").length;
       const pendingTasks = totalTasks - completedTasks;
 
-      const employeeRes = await axios.get("https://task.dentalguru.software/api/employees");
+
+
+      const employeeRes = await axios.get("https://task.dentalguru.software/api/employees", {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const totalEmployees = employeeRes.data.length;
 
       setStats({ totalTasks, completedTasks, pendingTasks, totalEmployees });
@@ -103,6 +126,22 @@ function EmployeeDashboard() {
         <div><span className="font-semibold">Priority:</span> {p.priority_item}</div>
         <div><span className="font-semibold">Status:</span> {p.status}</div>
         <div><span className="font-semibold">Created:</span> {new Date(p.createdTime).toLocaleString()}</div>
+          {p.file && (
+          <div className="mt-1 ml-5">
+            <a href={p.file} target="_blank" rel="noopener noreferrer">
+              {p.file.endsWith(".pdf") ? (
+                <span className="text-blue-600 underline">📄 View PDF</span>
+              ) : (
+                <img
+                  src={p.file}
+                  alt="priority file"
+                  className="w-20 h-20 mt-1 border rounded object-cover"
+                />
+                
+              )}
+            </a>
+          </div>
+        )}
       </li>
                       ))}
                     </ul>

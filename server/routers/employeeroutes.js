@@ -6,13 +6,13 @@ const { createEmployee, getAllEmployees, getEmployeeById, updateEmployee, delete
 const { getAllTasksByEmployee } = require("../controllers/UserController");
 
 router.post("/employees", createEmployee);
-router.get("/employees", getAllEmployees);
-router.get("/employees/:id", getEmployeeById);
+router.get("/employees",authenticate, getAllEmployees);
+router.get("/employees/:id",authenticate, getEmployeeById);
 router.put("/employees/:id", updateEmployee);
 router.delete("/employees/:id", deleteEmployee);
-router.get("/employees-task/:id", getEmployeeByIdOfTask);
-router.get("/assign-employee/:id", getAllTasksByEmployee);
+router.get("/employees-task/:id",authenticate, getEmployeeByIdOfTask);
+router.get("/assign-employee/:id",authenticate, getAllTasksByEmployee);
 router.put("/edit-employee-task/:id", updateTaskEmployee);
-router.get("/employee-task-history/:employeeId", getAllTasksWithPrioritiesByEmployee);
+router.get("/employee-task-history/:employeeId",authenticate, getAllTasksWithPrioritiesByEmployee);
 
 module.exports = router;

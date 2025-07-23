@@ -5,7 +5,8 @@ import { useNavigate } from "react-router-dom";
 
 function TaskHistoryDash() {
   const [completedTasks, setCompletedTasks] = useState([]);
-  const employeedata = useSelector(state => state.auth.user);
+ const employeedata  = useSelector(state => state.auth.user)
+  const token = employeedata?.token;
 const navigate = useNavigate();
   useEffect(() => {
     fetchTaskHistory();
@@ -13,7 +14,12 @@ const navigate = useNavigate();
 
   const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get(`https://task.dentalguru.software/api/employee-task-history/${employeedata.id}`);
+      const response = await axios.get(`https://task.dentalguru.software/api/employee-task-history/${employeedata.id}`, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const allTasks = response.data;
 
       const completed = allTasks

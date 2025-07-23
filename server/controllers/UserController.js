@@ -435,24 +435,55 @@ const resetPasswordSuperAdmin = (req, res) => {
 };
 
 const createTask = (req, res) => {
-  const { title, assigned_to, due_date, priority, taskpriorities,employeeId } = req.body;
+  const { title, assigned_to, due_date, priority, taskpriorities, employeeId } = req.body;
+  const parsedPriorities = JSON.parse(taskpriorities); // from FormData
+  const files = req.files;
 
-  const taskSql = "INSERT INTO tasks (title, assigned_to, due_date, priority,employeeId) VALUES (?, ?, ?, ?,?)";
-  const taskValues = [title, assigned_to, due_date, priority,employeeId];
+  const taskSql = "INSERT INTO tasks (title, assigned_to, due_date, priority, employeeId) VALUES (?, ?, ?, ?, ?)";
+  const taskValues = [title, assigned_to, due_date, priority, employeeId];
 
   db.query(taskSql, taskValues, (err, result) => {
     if (err) return res.status(500).json({ error: err });
 
     const taskId = result.insertId;
 
-    const prioritySql = "INSERT INTO task_priorities (task_id, priority_item,employeeId) VALUES ?";
-    const priorityValues = taskpriorities.map(item => [taskId, item,employeeId]);
+    const prioritySql = "INSERT INTO task_priorities (task_id, priority_item, file, employeeId) VALUES ?";
+const basePath = "https://task.dentalguru.software/uploads/";
+
+const priorityValues = parsedPriorities.map((item, index) => {
+  const filename = files[index]?.filename || null;
+  const filePath = filename ? basePath + filename : null;
+  return [taskId, item.value, filePath, employeeId];
+});
 
     db.query(prioritySql, [priorityValues], (err2) => {
       if (err2) return res.status(500).json({ error: err2 });
 
       res.status(201).json({ message: "Task created successfully", taskId });
     });
+  });
+};
+
+const updateTaskPriorities = (req, res) => {
+  const id = req.params.id;
+  const { priority_item } = req.body;
+  const file = req.file ? `https://task.dentalguru.software/uploads/${req.file.filename}` : null;
+
+  // If new file uploaded → update both priority_item and file
+  // Else → update only priority_item
+  let sql, values;
+
+  if (file) {
+    sql = "UPDATE task_priorities SET priority_item = ?, file = ? WHERE id = ?";
+    values = [priority_item, file, id];
+  } else {
+    sql = "UPDATE task_priorities SET priority_item = ? WHERE id = ?";
+    values = [priority_item, id];
+  }
+
+  db.query(sql, values, (err) => {
+    if (err) return res.status(500).json({ error: err });
+    res.json({ message: "Task priority updated" });
   });
 };
 
@@ -491,7 +522,7 @@ const getTaskById = (req, res) => {
 const updateTask = (req, res) => {
   const taskId = req.params.id;
   const { title, assigned_to, employeeId, due_date, priority } = req.body;
-
+  console.log(title, assigned_to, employeeId, due_date, priority)
   // Update the task table
   const updateSql = `
     UPDATE tasks 
@@ -551,6 +582,7 @@ const deleteTask = (req, res) => {
         p.id AS priority_id,
         p.priority_item,
         p.status,
+        p.file,
         p.createdTime
       FROM tasks t
       LEFT JOIN task_priorities p ON t.id = p.task_id
@@ -585,6 +617,7 @@ const deleteTask = (req, res) => {
             id: row.priority_id,
             priority_item: row.priority_item,
             status: row.status,
+            file: row.file,
             createdTime: row.createdTime,
           });
         }
@@ -610,6 +643,7 @@ const getAllTasksByEmployee = (req, res) => {
       tp.id AS priority_id,
       tp.priority_item,
       tp.status,
+      tp.file,
       tp.createdTime
     FROM tasks t
     LEFT JOIN task_priorities tp ON t.id = tp.task_id
@@ -640,6 +674,7 @@ const getAllTasksByEmployee = (req, res) => {
           id: row.priority_id,
           priority_item: row.priority_item,
           status: row.status,
+          file: row.file,
           createdTime: row.createdTime,
         });
       }
@@ -710,4 +745,4 @@ const getAllTasksList = (req, res) => {
 
 
   
-  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities,getAllTasksByEmployee,getAllTasksList,};
+  module.exports = {user_data,getuserdata,register,login,sendOtpSuperAdmin,verifyOtpSuperAdmin,resetPasswordSuperAdmin,deleteContatct,createTask,updateTask,deleteTask,getAllTasks,getTaskById,getAllTasksWithPriorities,getAllTasksByEmployee,getAllTasksList,updateTaskPriorities};
