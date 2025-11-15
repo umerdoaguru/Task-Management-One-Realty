@@ -2,11 +2,15 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import ReactPaginate from "react-paginate";
 
 function TaskHistoryDash() {
   const [completedTasks, setCompletedTasks] = useState([]);
  const employeedata  = useSelector(state => state.auth.user)
   const token = employeedata?.token;
+    const [filterText, setFilterText] = useState('');
+  const [currentPage, setCurrentPage] = useState(0);
+  const [leadsPerPage, setLeadsPerPage] = useState(10);
 const navigate = useNavigate();
   useEffect(() => {
     fetchTaskHistory();
@@ -37,6 +41,28 @@ const navigate = useNavigate();
       console.error("Failed to fetch task history:", err);
     }
   };
+  const filteredTasks = completedTasks.filter((t) =>
+  (t.title || "").toLowerCase().includes((filterText || "").trim().toLowerCase()) ||
+  (t.assigned_to || "").toLowerCase().includes((filterText || "").trim().toLowerCase())
+);
+
+
+  // Calculate total number of pages
+const pageCount = Math.ceil(filteredTasks.length / leadsPerPage);
+
+  // Pagination logic
+  const indexOfLastLead = (currentPage + 1) * leadsPerPage;
+  const indexOfFirstLead = indexOfLastLead - leadsPerPage;
+const currentLeads =
+  leadsPerPage === Infinity
+    ? filteredTasks
+    : filteredTasks.slice(indexOfFirstLead, indexOfLastLead);
+
+  const handlePageClick = (data) => {
+    setCurrentPage(data.selected);
+  };
+  
+
 
   return (
     <div className="container 2xl:w-[89%] 2xl:ml-40 mt-20 p-4">
@@ -47,8 +73,16 @@ const navigate = useNavigate();
             Go Back
           </button>
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task History (Completed)</h2>
-
-      {completedTasks.length === 0 ? (
+ <div className="mb-4">
+  <input
+    type="text"
+    placeholder="Search by Title or Employee..."
+    className="border border-gray-300 rounded px-4 py-2 w-full sm:w-1/3"
+    value={filterText}
+    onChange={(e) => setFilterText(e.target.value)}
+  />
+</div>
+      {currentLeads.length === 0 ? (
         <p className="text-center text-gray-500">No completed tasks found.</p>
       ) : (
         <div className="overflow-x-auto">
@@ -64,7 +98,7 @@ const navigate = useNavigate();
               </tr>
             </thead>
             <tbody>
-              {completedTasks.map((task, index) => (
+              {currentLeads.map((task, index) => (
                 <tr key={task.id} className="border-t border-gray-200 hover:bg-gray-50">
                   <td className="px-4 py-3">{index + 1}</td>
                   <td className="px-4 py-3 font-semibold text-blue-600">{task.title}</td>
@@ -84,6 +118,28 @@ const navigate = useNavigate();
           </table>
         </div>
       )}
+          <div className=" mt-4 mb-3 flex justify-center">
+            <ReactPaginate
+              previousLabel={"Previous"}
+              nextLabel={"Next"}
+              breakLabel={"..."}
+              pageCount={pageCount}
+              marginPagesDisplayed={2}
+              pageRangeDisplayed={3}
+              onPageChange={handlePageClick}
+              containerClassName="flex justify-center gap-2"
+              pageClassName="border rounded cursor-pointer"
+              pageLinkClassName="w-full h-full flex items-center justify-center py-2 px-4"
+              previousClassName="border rounded cursor-pointer"
+              previousLinkClassName="w-full h-full flex items-center justify-center py-2 px-3"
+              nextClassName="border rounded cursor-pointer"
+              nextLinkClassName="w-full h-full flex items-center justify-center py-2 px-3"
+              breakClassName="border rounded cursor-pointer"
+              breakLinkClassName="w-full h-full flex items-center justify-center"
+              activeClassName="bg-blue-500 text-white border-blue-500"
+              disabledClassName="opacity-50 cursor-not-allowed"
+            />
+          </div>
     </div>
   );
 }

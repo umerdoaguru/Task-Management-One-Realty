@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate, useParams } from "react-router-dom";
 import ReactPaginate from "react-paginate";
+import { useSelector } from "react-redux";
 
 function EmployeeAllDetailTask() {
     const [tasks, setTasks] = useState([]);
@@ -10,13 +11,19 @@ function EmployeeAllDetailTask() {
     const [filterText, setFilterText] = useState('');
   const {id} = useParams();
   const navigate = useNavigate();
-
+ const usertoken = useSelector((state) => state.auth.user);
+    const token = usertoken?.token;
   useEffect(() => {
     fetchTaskHistory();
   }, []);
  const fetchTaskHistory = async () => {
     try {
-      const response = await axios.get(`https://task.dentalguru.software/api/tasks-employee/${id}`);
+      const response = await axios.get(`https://task.dentalguru.software/api/tasks-employee/${id}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+          }});
       const allTasks = response.data;
       setTasks(allTasks);
     } catch (err) {
@@ -63,7 +70,7 @@ const currentLeads =
 <div className="mb-4">
   <input
     type="text"
-    placeholder="Search by Title or Employee..."
+    placeholder="Search by Title or Assigned To"
     className="border border-gray-300 rounded px-4 py-2 w-full sm:w-1/3"
     value={filterText}
     onChange={(e) => setFilterText(e.target.value)}

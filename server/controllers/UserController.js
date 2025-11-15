@@ -700,6 +700,7 @@ const getAllTasksList = (req, res) => {
       tp.id AS priority_id,
       tp.priority_item,
       tp.status,
+        tp.file,
       tp.createdTime
     FROM tasks t
     LEFT JOIN task_priorities tp ON t.id = tp.task_id
@@ -730,6 +731,7 @@ const getAllTasksList = (req, res) => {
           id: row.priority_id,
           priority_item: row.priority_item,
           status: row.status,
+            file: row.file,
           createdTime: row.createdTime,
         });
       }

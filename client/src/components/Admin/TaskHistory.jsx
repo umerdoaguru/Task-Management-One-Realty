@@ -8,6 +8,9 @@ function TaskHistory() {
     const [currentPage, setCurrentPage] = useState(0);
   const [leadsPerPage, setLeadsPerPage] = useState(10);
     const [filterText, setFilterText] = useState('');
+     const [dueDateFilter, setDueDateFilter] = useState("");
+
+
 const usertoken = useSelector((state) => state.auth.user);
   const token = usertoken?.token;
 
@@ -40,10 +43,18 @@ const usertoken = useSelector((state) => state.auth.user);
       console.error("Failed to fetch task history:", err);
     }
   };
-const filteredTasks = completedTasks.filter((t) =>
-  (t.title || "").toLowerCase().includes((filterText || "").trim().toLowerCase()) ||
-  (t.assigned_to || "").toLowerCase().includes((filterText || "").trim().toLowerCase())
-);
+const filteredTasks = completedTasks.filter((t) => {
+  const matchesText =
+    (t.title || "").toLowerCase().includes((filterText || "").trim().toLowerCase()) ||
+    (t.assigned_to || "").toLowerCase().includes((filterText || "").trim().toLowerCase());
+
+  const matchesDate = dueDateFilter
+    ? new Date(t.due_date).toISOString().slice(0, 10) === dueDateFilter
+    : true;
+
+  return matchesText && matchesDate;
+});
+
 
 
   // Calculate total number of pages
@@ -65,16 +76,27 @@ const currentLeads =
   return (
     <div className="container 2xl:w-[89%] 2xl:ml-40 mt-20 p-4">
       <h2 className="text-2xl font-bold mb-6 text-center text-blue-700">📝 Task History (Completed)</h2>
+      <div className=" flex justify-normal gap-4  flex-wrap">
       <div className="mb-4">
   <input
     type="text"
-    placeholder="Search by Title or Employee..."
-    className="border border-gray-300 rounded px-4 py-2 w-full sm:w-1/3"
+    placeholder="Search by Title or Assigned To"
+    className="border border-gray-300 rounded px-2 py-2 w-[110%]"
     value={filterText}
     onChange={(e) => setFilterText(e.target.value)}
   />
 </div>
 
+
+<div className="mb-4 mx-2 ">
+  <input
+    type="date"
+    value={dueDateFilter}
+    onChange={(e) => setDueDateFilter(e.target.value)}
+    className="border border-gray-300 rounded px-4 py-2 "
+  />
+</div>
+</div>
 
       {currentLeads.length === 0 ? (
         <p className="text-center text-gray-500">No completed tasks found.</p>

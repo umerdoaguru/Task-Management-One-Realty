@@ -14,9 +14,8 @@ function TaskMangement() {
   const navigate = useNavigate();
   const [task, setTasks] = useState([]);
   const [employees, setEmployees] = useState([]);
-  const [filterText, setFilterText] = useState('');
-
-
+  
+  
   const [currentLead, setCurrentLead] = useState({
     title: "",
     assigned_to: "",
@@ -27,11 +26,12 @@ function TaskMangement() {
 
   const usertoken = useSelector((state) => state.auth.user);
   const token = usertoken?.token;
-
+  
   const [showPopup, setShowPopup] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [errors, setErrors] = useState({});
-
+  
+  const [filterText, setFilterText] = useState('');
   const [currentPage, setCurrentPage] = useState(0);
   const [leadsPerPage, setLeadsPerPage] = useState(10);
 
